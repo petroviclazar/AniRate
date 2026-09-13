@@ -1,0 +1,64 @@
+<body>
+  <ng-container *ngIf="authenticated">
+    <div class="add-anime-form">
+      <h3>Dodaj novi studio</h3>
+      <form (ngSubmit)="addAnimeStudio()" [formGroup]="form">
+        <div class="form-group">
+          <label for="name">Naziv studija:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            [(ngModel)]="newAnimeStudio.name"
+            formControlName="name"
+            required
+          />
+          <label for="name">Izaberite sliku:</label>
+          <input
+            type="file"
+            id="slika"
+            name="slika"
+            (change)="handleFileChange($event)"
+            formControlName="slika"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-purple">Dodaj anime studio</button>
+      </form>
+    </div>
+  </ng-container>
+
+  <div class="animestudija-container">
+    <h2 class="tekstzaStudio">ANIME STUDIJA</h2>
+    <div class="loading" *ngIf="isLoading$ | async">
+      Loading...
+      <img src="../../images/loader.svg" class="loadingscreen" />
+    </div>
+    <div class="error" *ngIf="error$ | async as errorMessage">
+      {{ errorMessage }}
+    </div>
+    <div class="anime-list">
+      <div class="anime-item" *ngFor="let anime of animeStudija$ | async">
+        <div class="anime-image-img">
+          <img src="{{ anime.slika }}" alt="{{ anime.slika }} slika" />
+        </div>
+        <div class="anime-details">
+          <h3>{{ anime.name }}</h3>
+
+          <a
+            [routerLink]="['/animestudio', anime.id]"
+            class="btn btn-purple dugmice"
+          >
+            Detalji
+          </a>
+        </div>
+      </div>
+      <div class="no-anime" *ngIf="(animeStudija$ | async)?.length === 0">
+        No anime studios available.
+      </div>
+    </div>
+  </div>
+</body>
+
+<!-- <button (click)="prikazi()">DUGME</button> -->

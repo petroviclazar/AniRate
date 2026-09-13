@@ -1,0 +1,319 @@
+.anime-item-info-item.genre,
+.anime-item-info-item.episodes,
+.anime-item-info-item.rating {
+  line-height: 1.4;
+  font-size: 14px;
+  margin-bottom: 4px;
+  white-space: nowrap; /* Tekst neće prelaziti u novi red */
+  overflow: hidden; /* Skrivanje viška teksta */
+  text-overflow: ellipsis; /* Dodavanje trotačaka ako je tekst predugačak */
+}
+.anime-item-info-item:not(.anime-item-info-item.title) span:last-child {
+  opacity: 0.8;
+}
+
+.nav-link:hover {
+  color: var(--purple-color);
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.fw-7 {
+  font-weight: 700;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+.fs-15 {
+  font-size: 15px;
+}
+/* Dodajte okvir oko svakog anime studija */
+.anime-item {
+  width: 100%; /* Anime element zauzima celu širinu kolone */
+  max-width: 300px; /* Maksimalna širina anime elementa */
+  margin: 10px;
+  background-color: rgb(219, 168, 212);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  overflow: hidden; /* Skrivanje viška teksta */
+  position: relative; /* Dodajte relativno pozicioniranje kako bismo postavili sliku studija unutar svakog animea */
+}
+
+/* Postavite maksimalnu širinu za red sa anime studijima */
+.anime-list {
+  display: grid;
+  gap: 10px; /* Smanjen razmak između anime elemenata */
+  justify-items: center; /* Centriranje elemenata */
+  margin-top: 2rem;
+}
+/* Stil za dodavanje novog anime studija */
+.add-anime-form {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Stil za naslov anime studija */
+h2 {
+  margin-bottom: 10px;
+}
+
+/* Stil za dugme za dodavanje anime studija */
+button {
+  background-color: #8d27ae;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #6c1d86;
+}
+
+/* Stil za formu za dodavanje novog anime studija */
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 5px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.loading {
+  font-style: italic;
+  margin-top: 10px;
+}
+.btn {
+  border-radius: 50px; /* Zaobljeni ivice */
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out; /* Tranzicija boje */
+}
+
+.btn-purple {
+  background-color: #8d27ae;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-purple:hover {
+  background-color: #6c1d86;
+}
+@media screen and (min-width: 1200px) {
+  .anime-list {
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* 4 u redu za širinu ekrana veću od 1200px */
+  }
+}
+
+@media screen and (max-width: 1199px) and (min-width: 993px) {
+  .anime-list {
+    grid-template-columns: repeat(
+      3,
+      1fr
+    ); /* 3 u redu za širinu ekrana između 993px i 1199px */
+  }
+}
+
+@media screen and (max-width: 992px) and (min-width: 601px) {
+  .anime-list {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* 2 u redu za širinu ekrana između 601px i 992px */
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .anime-list {
+    grid-template-columns: repeat(
+      1,
+      1fr
+    ); /* 1 u redu za širinu ekrana manju od 600px */
+  }
+}
+
+.anime-studio-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 350%;
+  max-width: 1000%;
+  z-index: -1; /* Postavite sloj ispod animea */
+  opacity: 0.5; /* Prilagodite prozirnost prema potrebi */
+}
+.anime-naslov {
+  text-align: center;
+  font-size: 50px;
+  color: rgb(98, 158, 158);
+}
+textarea[type="description"],
+input[type="number"],
+textarea[type="name"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #a50e0e;
+  border-radius: 3px;
+}
+textarea[type="description"],
+input[type="number"],
+textarea[type="name"],
+input[type="file"] {
+  width: 60%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #a50e0e;
+  border-radius: 3px;
+  outline: none; /* Uklonite obrub (outline) kad element dobije fokus */
+  align-self: center;
+}
+
+/* Zaobljene ivice */
+textarea[type="description"],
+textarea[type="name"],
+input[type="number"],
+input[type="file"],
+button {
+  /* Dodajte dugmad u ovoj selektori ako želite zaobliti njihove ivice */
+  border-radius: 5px;
+}
+
+/* Smanjite dugmad */
+button {
+  font-size: 14px; /* Prilagodite veličinu fonta prema potrebama */
+  padding: 8px 12px; /* Prilagodite veličinu padding-a prema potrebama */
+}
+
+/* Centriranje dugmadi */
+button {
+  display: block;
+  margin: 0 auto;
+}
+body {
+  display: flex;
+  justify-content: center; /* Horizontalno centriranje */
+  align-items: center; /* Vertikalno centriranje */
+  height: 100vh; /* Visina ekran */
+  margin: 0; /* Uklonite unapred postavljeni margin */
+}
+
+/* Ovaj stil će centrirati sadržaj unutar .add-anime-form kontejnera */
+.add-anime-form {
+  text-align: center; /* Centriraj tekst unutar kontejnera */
+  padding: 20px; /* Dodajte prostor oko sadržaja za bolji izgled */
+  border-radius: 8px; /* Dodajte zaobljenje ivica za bolji izgled */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Dodajte senku za efekat dizajna */
+}
+
+.anime-item-img img {
+  max-width: 180px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.anime-item-info {
+  margin-top: 2rem;
+}
+.anime-item-info {
+  margin-top: 2rem;
+}
+
+.anime-item-info-item.title {
+  line-height: 1.4;
+  margin-bottom: 0.8rem;
+}
+.anime-item-img img {
+  max-width: 180px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.anime-item-info {
+  margin-top: 2rem;
+}
+
+.anime-item-info-item.title {
+  line-height: 1.4;
+  margin-bottom: 0.8rem;
+}
+
+.anime-item-info-item.genre {
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.anime-item-info-item:not(.anime-item-info-item.title) span:last-child {
+  opacity: 0.8;
+}
+
+.anime-item-info-item.episodes {
+  opacity: 0.6;
+  font-style: italic;
+  font-size: 14px;
+}
+
+@media screen and (min-width: 600px) {
+  .animelist-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .animelist-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .anime-item-img img {
+    max-width: 150px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .animelist-content {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .anime-item-img img {
+    max-width: 120px;
+  }
+}
+.btn {
+  border-radius: 50px; /* Zaobljeni ivice */
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out; /* Tranzicija boje */
+}
+.anime-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

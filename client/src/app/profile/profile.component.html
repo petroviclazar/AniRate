@@ -1,0 +1,47 @@
+<div class="SlikaZaPozadinu">
+  <div class="animedetails-info">
+    <div class="animedetails-item">
+      <form (ngSubmit)="updateSliku()" [formGroup]="form" class="Levo">
+        <input
+          type="file"
+          id="photo"
+          name="photo"
+          (change)="handleFileChange($event)"
+          formControlName="photo"
+          required
+        />
+        <button type="submit" class="btn btn-purple">Promeni sliku</button>
+      </form>
+      <div *ngIf="useri$ | async as user" class="animedetails-item">
+        <img [src]="user?.photo" alt="{{ user?.photo }} slika" />
+      </div>
+
+      <div class="user-details">
+        <h2>Korisnik: {{ user?.username }}</h2>
+        <p>Email: {{ user?.email }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="anime-list animelist-content">
+    <div *ngFor="let anime1 of anime1$ | async" class="anime-item">
+      <div class="anime-item-img">
+        <img src="{{ anime1.title }}" alt="{{ anime1.title }} slika" />
+      </div>
+      <div class="anime-item-info">
+        <p class="anime-item-info-item title">Naziv: {{ anime1.name }}</p>
+        <p class="anime-item-info-item genre">Opis: {{ anime1.description }}</p>
+        <p class="anime-item-info-item episodes">
+          Epizoda: {{ anime1.episodeCount }}
+        </p>
+        <p class="anime-item-info-item rating">Ocena: {{ anime1.rating }}</p>
+        <a
+          [routerLink]="['/anime', anime1.id]"
+          class="nav-link text-uppercase text-black fs-22 fw-6 ls-1"
+        >
+          Detalji
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <button (click)="prikazi()">DUGME</button> -->

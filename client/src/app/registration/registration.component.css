@@ -1,0 +1,51 @@
+/* Stil za formu */
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #a50e0e;
+  border-radius: 3px;
+}
+
+.dugme {
+  background-color: #8d27ae;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.dugme:hover {
+  background-color: #6c1d86;
+}
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+#hero {
+  min-height: 92vh;
+  background: linear-gradient(rgba(141, 39, 174, 0.3), rgba(141, 39, 174, 0.5)),
+    url(../../images/PozadinaZaRegistraciju.jpg) center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

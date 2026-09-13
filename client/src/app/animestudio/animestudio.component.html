@@ -1,0 +1,156 @@
+<div *ngIf="animeStudio$ | async as animeStudio" class="anime-naslov">
+  <h2>{{ animeStudio.name }}</h2>
+</div>
+<ng-container *ngIf="authenticated">
+  <div class="add-anime-form">
+    <h2>Dodaj novi anime</h2>
+    <form (submit)="addAnime()" [formGroup]="form">
+      <label for="description">Naslov:</label>
+      <textarea
+        type="name"
+        id="name"
+        name="name"
+        formControlName="name"
+        required
+      ></textarea>
+      <label for="title">Slika:</label>
+      <input
+        type="file"
+        id="title"
+        name="title"
+        (change)="handleFileChange($event)"
+        formControlName="title"
+        required
+      />
+
+      <label for="description">Opis:</label>
+      <textarea
+        type="description"
+        id="description"
+        name="description"
+        formControlName="description"
+        required
+      ></textarea>
+
+      <label for="episodeCount">Broj epizoda:</label>
+      <input
+        type="number"
+        id="episodeCount"
+        name="episodeCount"
+        formControlName="episodeCount"
+        required
+      />
+
+      <button type="submit">Add Anime</button>
+    </form>
+  </div>
+</ng-container>
+
+<div class="animestudio-container"></div>
+<div class="anime-list animelist-content">
+  <div *ngFor="let anime1 of anime1$ | async" class="anime-item">
+    <div class="anime-item-img">
+      <img src="{{ anime1.title }}" alt="{{ anime1.title }} slika" />
+    </div>
+    <div class="anime-item-info">
+      <p class="anime-item-info-item title">Naziv: {{ anime1.name }}</p>
+      <p class="anime-item-info-item genre">Opis: {{ anime1.description }}</p>
+      <p class="anime-item-info-item episodes">
+        Epizoda: {{ anime1.episodeCount }}
+      </p>
+      <p class="anime-item-info-item rating">Ocena: {{ anime1.rating }}</p>
+      <a
+        [routerLink]="['/anime', anime1.id]"
+        class="nav-link text-uppercase text-black fs-22 fw-6 ls-1"
+      >
+        Detalji
+      </a>
+    </div>
+  </div>
+</div>
+<div *ngIf="animeStudio$ | async as animeStudio" class="anime-details">
+  <img
+    [src]="animeStudio.slika"
+    alt="{{ animeStudio.name }} slika"
+    class="anime-studio-image"
+  />
+</div>
+<div *ngIf="animeStudio$ | async as animeStudio" class="anime-details">
+  <img
+    [src]="animeStudio.slika"
+    alt="{{ animeStudio.name }} slika"
+    class="anime-studio-image"
+  />
+</div>
+<!-- <button (click)="prikazi()">DUGME</button> -->
+<!-- <div class="add-anime-form">
+  <h2>Add New Anime</h2>
+  <form #animeForm="ngForm" [formGroup]="form">
+    <label for="description">Naslov:</label>
+    <textarea
+      id="name"
+      name="name"
+      formControlName="name"
+      [(ngModel)]="newAnime.name"
+      required
+    ></textarea>
+    <label for="title">Title:</label>
+    <input
+      type="file"
+      id="title"
+      name="title"
+      formControlName="title"
+      (change)="handleFileChange($event)"
+      required
+    />
+
+    <label for="description">Description:</label>
+    <textarea
+      id="description"
+      name="description"
+      formControlName="description"
+      [(ngModel)]="newAnime.description"
+      required
+    ></textarea>
+
+    <label for="episodeCount">Episode Count:</label>
+    <input
+      type="number"
+      id="episodeCount"
+      name="episodeCount"
+      formControlName="episodeCount"
+      [(ngModel)]="newAnime.episodeCount"
+      required
+    />
+
+    <button type="submit">Add Anime</button>
+  </form>
+</div>
+<div class="animestudio-container"></div>
+<div *ngIf="animeStudio$ | async as animeStudio" class="anime-details">
+  <p>Prikazi</p>
+  <h2>{{ animeStudio.name }}</h2>
+  <img [src]="animeStudio.slika" alt="{{ animeStudio.name }} slika" />
+</div>
+<div class="anime-list animelist-content">
+  <div *ngFor="let anime1 of anime1$ | async" class="anime-item">
+    <div class="anime-item-img">
+      <img src="{{ anime1.id }}.jpg" alt="{{ anime1.title }} slika" />
+    </div>
+    <div class="anime-item-info">
+      <p class="anime-item-info-item title">Naziv: {{ anime1.title }}</p>
+      <p class="anime-item-info-item genre">Opis: {{ anime1.description }}</p>
+      <p class="anime-item-info-item episodes">
+        Epizoda: {{ anime1.episodeCount }}
+      </p>
+      <p class="anime-item-info-item rating">Ocena: {{ anime1.rating }}</p>
+      <a
+        [routerLink]="['/anime', anime1.id]"
+        class="nav-link text-uppercase text-black fs-22 fw-6 ls-1"
+      >
+        Detalji
+      </a>
+    </div>
+  </div>
+</div>
+<button (click)="prikazi()">DUGME</button> -->
