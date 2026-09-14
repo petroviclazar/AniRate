@@ -23,6 +23,8 @@ import { reducers2 } from './store/reducers/animeStudija.reducers';
 import { AnimeStudijaEffects } from './store/effects/AnimeStudija.effects';
 import { AnimeStudioEffects } from './store/effects/animeStudio.effects';
 import { AnimeiComponent } from './animei/animei.component';
+import { CompareComponent } from './compare/compare.component';
+import { CompareCardComponent } from './compare-card/compare-card.component';
 import { AnimeEffects } from './store/effects/anime.effects';
 import { AnimeiEffects } from './store/effects/animei.effects';
 import { reducers3 } from './store/reducers/animeStudio.reducers';
@@ -51,6 +53,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     AnimestudioComponent,
     AnimestudijaComponent,
     AnimeiComponent,
+    CompareComponent,
+    CompareCardComponent,
     FilterPipe,
     ProfileComponent,
     NotFoundComponent,
