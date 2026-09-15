@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { zip } from 'rxjs';
+import { take, zip } from 'rxjs';
 import { AnimeService } from '../services/anime.service';
 import { Anime } from '../store/types/anime.module';
 
@@ -66,19 +66,24 @@ export class CompareComponent {
     // (za razliku od combineLatest koji bi reagovao na svaku pojedinacnu
     // promenu) - ovde nam bas treba par (prvi, drugi) tacno jednom, sto
     // odgovara semantici jednokratnog HTTP GET poziva.
+    // take(1) garantuje da se stream zatvori posle prvog para rezultata,
+    // pa se pretplata sama otkazuje i nema potrebe za rucnim unsubscribe.
     zip(
       this.animeService.getAnimeByStudio(this.idPrvi),
       this.animeService.getAnimeByStudio(this.idDrugi)
-    ).subscribe({
-      next: ([prvi, drugi]) => {
-        this.animePrvi = prvi;
-        this.animeDrugi = drugi;
-        this.ucitano = true;
-      },
-      error: () => {
-        this.greska = 'Nisam uspeo da učitam jedan ili oba anime naslova. Proveri da li ID-jevi postoje.';
-      },
-    });
+    )
+      .pipe(take(1))
+      .subscribe({
+        next: ([prvi, drugi]) => {
+          this.animePrvi = prvi;
+          this.animeDrugi = drugi;
+          this.ucitano = true;
+        },
+        error: () => {
+          this.greska =
+            'Nisam uspeo da učitam jedan ili oba anime naslova. Proveri da li ID-jevi postoje.';
+        },
+      });
   }
 
   // Handler za (dodajULlistu) @Output dogadjaj iz child app-compare-card komponente

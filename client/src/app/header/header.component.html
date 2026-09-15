@@ -1,0 +1,52 @@
+<div class="holder backgroud-color">
+  <div class="header-content flex flex-c text-center text-white">
+    <h2 class="header-title text-capitalize">Pronađi svoj anime</h2>
+    <br />
+    <p
+      class="fs-18 fw-3"
+      *ngIf="brojNaslova > 0"
+      style="opacity: 0.9; margin-bottom: 1.5rem;"
+    >
+      {{ brojNaslova }} naslova u katalogu &middot; prosečna ocena
+      {{ prosecnaOcena }} &middot; {{ ukupnoEpizoda }} epizoda ukupno
+      <span *ngIf="najboljeOcenjen"
+        >&middot; najbolje ocenjen: {{ najboljeOcenjen.name }}</span
+      >
+    </p>
+    <div class="search-form">
+      <div class="search-form-elem">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          placeholder="Naruto, One Piece..."
+          class="form-control"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="anime-list animelist-content backgroud-color">
+    <div
+      *ngFor="let anime of anime$ | async | filter : searchText; let i = index"
+      class="anime-item"
+    >
+      <div class="anime-item-img">
+        <img src="{{ anime.title }}" alt="{{ anime.title }} slika" />
+      </div>
+      <div class="anime-item-info">
+        <p class="anime-item-info-item title">Naziv: {{ anime.name }}</p>
+        <p class="anime-item-info-item genre">Opis: {{ anime.description }}</p>
+        <p class="anime-item-info-item episodes">
+          Epizoda: {{ anime.episodeCount }}
+        </p>
+        <p class="anime-item-info-item rating">Ocena: {{ anime.rating }}</p>
+        <a
+          [routerLink]="['/anime', anime.id]"
+          class="nav-link text-uppercase text-black fs-22 fw-6 ls-1"
+        >
+          Detalji
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <button (click)="prikazi()">DUGME</button> -->
