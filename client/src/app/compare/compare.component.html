@@ -1,0 +1,39 @@
+<div class="compare-page">
+  <h2 class="compare-title">Uporedi dva anime naslova</h2>
+
+  <div class="compare-form">
+    <div>
+      <input
+        type="number"
+        [(ngModel)]="idPrvi"
+        (blur)="brziPregled(idPrvi, 'prvi')"
+        placeholder="ID prvog naslova"
+      />
+      <div *ngIf="pregledPrvi" class="compare-preview">{{ pregledPrvi }}</div>
+    </div>
+    <div>
+      <input
+        type="number"
+        [(ngModel)]="idDrugi"
+        (blur)="brziPregled(idDrugi, 'drugi')"
+        placeholder="ID drugog naslova"
+      />
+      <div *ngIf="pregledDrugi" class="compare-preview">{{ pregledDrugi }}</div>
+    </div>
+    <button class="compare-btn" (click)="uporedi()">Uporedi</button>
+  </div>
+
+  <p *ngIf="greska" class="compare-error">{{ greska }}</p>
+
+  <div class="compare-results" *ngIf="ucitano">
+    <app-compare-card
+      [anime]="animePrvi"
+      (dodajULlistu)="dodajUListu($event)"
+    ></app-compare-card>
+
+    <app-compare-card
+      [anime]="animeDrugi"
+      (dodajULlistu)="dodajUListu($event)"
+    ></app-compare-card>
+  </div>
+</div>

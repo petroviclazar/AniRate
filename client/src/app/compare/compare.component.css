@@ -1,0 +1,68 @@
+.compare-page {
+  padding: 4rem 2rem;
+  min-height: 60vh;
+  background-color: #fad4e5;
+}
+
+.compare-title {
+  text-align: center;
+  font-size: 2.6rem;
+  color: var(--purple-color, #8d27ae);
+  margin-bottom: 2.5rem;
+}
+
+.compare-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.compare-form input {
+  width: 220px;
+  padding: 1rem 1.3rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1.2rem;
+}
+
+.compare-preview {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--purple-color, #8d27ae);
+  font-style: italic;
+}
+
+.compare-btn {
+  background-color: var(--purple-color, #8d27ae);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2.4rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.compare-btn:hover {
+  background-color: #6c1d86;
+}
+
+.compare-error {
+  text-align: center;
+  color: #b3003b;
+  margin-bottom: 1.5rem;
+}
+
+.compare-results {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
