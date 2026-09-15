@@ -3,10 +3,9 @@ import {
   Inject,
   ConflictException,
   BadRequestException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, LoginDto } from '../user/user.entity';
+import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
 import { AnimeService } from 'src/anime/anime.service';
 import { NotFoundException } from '@nestjs/common';
@@ -110,28 +109,6 @@ export class UserService {
       },
     });
     return user;
-  }
-  async signIn(loginDto: LoginDto) {
-    const user = await this.userRepository.findOne({
-      where: { username: loginDto.username },
-    });
-    if (!user) {
-      throw new UnauthorizedException('Pogrešno korisničko ime ili lozinka');
-    }
-    const passwordMatches = await bcrypt.compare(
-      loginDto.password,
-      user.password,
-    );
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Pogrešno korisničko ime ili lozinka');
-    }
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      role: user.role,
-    };
-    const jwt = await this.jwtService.signAsync(payload);
-    return jwt;
   }
   async findUserWithAnime(userId: number) {
     console.log(userId);

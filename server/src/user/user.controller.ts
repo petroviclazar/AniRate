@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { LoginDto, User } from './user.entity';
+import { User } from './user.entity';
 import { Response, Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
@@ -53,19 +53,6 @@ export class UserController {
     return this.userService.updateSliku(userId, photo);
   }
 
-  @Post('login')
-  async login(
-    @Res({ passthrough: true }) response: Response,
-    @Body() loginDTO: LoginDto,
-  ) {
-    const token = await this.userService.signIn(loginDTO);
-    response.cookie('jwt', token, { httpOnly: true });
-    console.log('nesto');
-    let user = await this.userService.getUserByUsername(loginDTO.username);
-
-    const { password, ...result } = user;
-    return result;
-  }
   @Get('getLoggedUser')
   async getLoggedUser(@Req() request: Request) {
     try {
