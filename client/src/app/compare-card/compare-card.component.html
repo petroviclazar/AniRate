@@ -1,0 +1,8 @@
+<div class="compare-card" *ngIf="anime">
+  <img src="{{ anime.title }}" alt="{{ anime.name }} slika" />
+  <h3>{{ anime.name }}</h3>
+  <p>{{ anime.description }}</p>
+  <p>Epizoda: {{ anime.episodeCount }}</p>
+  <p class="rating">Ocena: {{ anime.rating }}</p>
+  <button class="add-btn" (click)="onDodaj()">Dodaj u moju listu</button>
+</div>

@@ -1,0 +1,51 @@
+.compare-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 5px 15px 0px;
+  padding: 2.2rem;
+  width: 340px;
+  text-align: center;
+}
+
+.compare-card img {
+  max-width: 200px;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1.2rem;
+}
+
+.compare-card h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+  color: #333;
+}
+
+.compare-card p {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.compare-card .rating {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--purple-color, #8d27ae);
+}
+
+.add-btn {
+  margin-top: 1rem;
+  background-color: var(--purple-color, #8d27ae);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.add-btn:hover {
+  background-color: #6c1d86;
+}

@@ -12,7 +12,10 @@ import { AnimeModule } from 'src/anime/anime.module';
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule,
-    JwtModule,
+    JwtModule.register({
+      secret: 'your-secret-key',
+      signOptions: { expiresIn: '10h' },
+    }),
     AnimeModule,
   ],
   controllers: [AuthController],
