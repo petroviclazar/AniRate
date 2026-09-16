@@ -1,0 +1,70 @@
+{
+  "animeList": [
+    {
+      "id": 1,
+      "name": "john.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    {
+      "id": 2,
+      "name": "2.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    {
+      "id": 3,
+      "name": "2.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "john.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    {
+      "id": 2,
+      "name": "2.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    {
+      "id": 3,
+      "name": "2.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    {
+      "id": 4,
+      "name": "2.doe",
+      "rating": "3",
+      "title": "admin",
+      "description": "Nesto",
+      "episodeCount": 21
+    },
+    { "id": 5, "username": "string", "password": "string", "role": "UserRole" },
+    {
+      "id": 6,
+      "username": "john.doe",
+      "password": "123456",
+      "role": "regular",
+      "animeList": []
+    }
+  ]
+}

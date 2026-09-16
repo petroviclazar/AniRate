@@ -39,7 +39,7 @@ export class UploadController {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
-    // PORT is fixed to 3000 in main.ts, so this URL is always correct locally
+
     const url = `http://localhost:3000/uploads/${file.filename}`;
     return { url };
   }

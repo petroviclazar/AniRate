@@ -1,0 +1,98 @@
+<!-- <p>anime works!</p> -->
+<div class="animedetails">
+  <!-- <a routerLink="/" class="back-btn">
+    <i class="fas fa-chevron-left"></i><span>Nazad</span>
+  </a> -->
+  <div class="animedetails-content">
+    <div class="animedetails-img">
+      <img
+        [src]="(anime$ | async)?.title"
+        [alt]="(anime$ | async)?.title + ' slika'"
+        class="anime-image"
+      />
+    </div>
+    <div class="animedetails-info">
+      <div class="animedetails-item">
+        <h2 class="fs-24 fw-6">{{ (anime$ | async)?.name }}</h2>
+      </div>
+      <div class="animedetails-item">
+        <p class="description">{{ (anime$ | async)?.description }}</p>
+      </div>
+      <div class="animedetails-item">
+        <p>Broj epizoda: {{ (anime$ | async)?.episodeCount }}</p>
+      </div>
+      <div class="animedetails-item">
+        <p>Ocena: {{ (anime$ | async)?.rating }}</p>
+      </div>
+      <ng-container *ngIf="authenticated">
+        <div class="animedetails-item">
+          <label for="newRating">Nova ocena:</label>
+          <input
+            type="number"
+            id="newRating"
+            [(ngModel)]="newAnimeRating.animeRating"
+            min="1"
+            max="10"
+          />
+        </div>
+        <div class="animedetails-item nav-item">
+          <button
+            (click)="dodaj()"
+            class="nav-link text-uppercase text-black fs-16 fw-6 ls-1"
+          >
+            Dodaj ocenu
+          </button>
+        </div>
+        <div class="animedetails-item nav-item">
+          <button
+            (click)="dodajKodUsera()"
+            class="nav-link text-uppercase text-black fs-16 fw-6 ls-1"
+          >
+            Dodaj u listu
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="authenticated">
+  <div class="animedetails-item">
+    <label for="newRating">Komentar:</label>
+    <input type="text" id="komentar" [(ngModel)]="newAnimeKomentar.komentar" />
+  </div>
+  <div class="animedetails-item nav-item">
+    <button
+      (click)="dodajKomentar()"
+      class="nav-link text-uppercase text-black fs-16 fw-6 ls-1"
+      [disabled]="!newAnimeKomentar.komentar"
+    >
+      Dodaj komentar
+    </button>
+  </div>
+</ng-container>
+
+<div class="anime-comments">
+  <div *ngFor="let komentar of animeKomentar$ | async" class="anime-comment">
+    <div class="profil korisnika">
+      <div class="animeslika-img">
+        <img
+          [src]="komentar.user?.photo || user.photo"
+          (error)="handleImageError($event)"
+          class="anime-image"
+          alt="{{ komentar.user?.photo }} slika"
+        />
+      </div>
+      <p>Korisnik: {{ komentar.user?.username || user.username }}</p>
+    </div>
+    <p>{{ komentar.komentar }}</p>
+    <button
+      *ngIf="komentar.user?.username == this.user.username"
+      type="submit"
+      class="btn btn-primary"
+      (click)="delete(komentar.id!)"
+    >
+      Delete
+    </button>
+  </div>
+</div>
+<!-- <button (click)="prikazi()">DUGME</button> -->

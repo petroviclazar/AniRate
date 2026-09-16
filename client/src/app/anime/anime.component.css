@@ -1,0 +1,171 @@
+.animedetails {
+  min-height: 92vh;
+  background: linear-gradient(rgba(141, 39, 174, 0.3), rgba(141, 39, 174, 0.5)),
+    url(../../images/pozadina.jpg) center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  backdrop-filter: blur(10px);
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.animedetails-img {
+  filter: blur(60%);
+  max-width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.animedetails-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.back-btn {
+  margin-bottom: 1rem;
+  text-decoration: none;
+  color: var(--purple-color);
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: var(--purple-hover-color);
+}
+
+.animedetails-content {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.animedetails-img {
+  width: 50%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.animedetails-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.animedetails-info {
+  width: 50%;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-left: 1rem;
+}
+
+.animedetails-title {
+  font-size: 24px;
+  margin-bottom: 0.5rem;
+}
+
+.animedetails-rating {
+  font-size: 18px;
+  margin-bottom: 1rem;
+}
+
+.animedetails-rating input {
+  width: 60px;
+}
+
+.animedetails-button {
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .animedetails-content {
+    flex-direction: column;
+  }
+
+  .animedetails-img,
+  .animedetails-info {
+    width: 100%;
+  }
+}
+.nav-item {
+  margin-bottom: 1.4rem;
+}
+
+.nav-link {
+  transition: var(--transition);
+}
+
+.nav-link:hover {
+  color: var(--purple-color);
+}
+.anime-comment {
+  background-color: #f8f9fa;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.anime-comment p {
+  margin: 0;
+}
+
+.anime-comment .card-text {
+  font-weight: bold;
+}
+
+.anime-comment img {
+  max-width: 100%;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+.anime-image {
+  width: 100%;
+  height: auto;
+}
+.profil.korisnika {
+  display: flex;
+  align-items: center;
+}
+
+.animeslika-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.animeslika-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+p {
+  margin: 0;
+}
+
+textarea[type="description"],
+input[type="number"],
+textarea[type="name"],
+input[type="text"] {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #a50e0e;
+  border-radius: 3px;
+}

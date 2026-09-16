@@ -106,23 +106,6 @@ export class AnimestudijaComponent implements OnInit {
       this.form.reset();
       this.selectedFile = null;
     }
-    // // Ako postoji base64Image, dodajte ga u newAnimeStudio
-    // if (base64Image) {
-    //   // Dodajte ".jpg" na kraj imena slike ako već nije prisutan
-    //   this.newAnimeStudio.slika = base64Image.endsWith('.jpg')
-    //     ? base64Image
-    //     : `${base64Image}.jpg`;
-    // }
-
-    // this.store.dispatch(
-    //   AnimeStudijaActions.postAnimeStudija({ animeStudio: this.newAnimeStudio })
-    // );
-
-    // // Resetiranje varijabli nakon dodavanja
-    // this.newAnimeStudio = {
-    //   name: '',
-    //   slika: '',
-    // };
-    // this.selectedImage = null;
+   
   }
 }

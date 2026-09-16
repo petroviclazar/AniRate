@@ -1,0 +1,6 @@
+.not-found {
+  min-height: 100vh;
+  background: linear-gradient(rgba(141, 39, 174, 0.3), rgba(141, 39, 174, 0.5)),
+    url(../../images/1.jpg) center/cover no-repeat;
+  flex-direction: column;
+}

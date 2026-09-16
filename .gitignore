@@ -1,0 +1,18 @@
+# Node
+node_modules/
+dist/
+
+# Docker / Postgres runtime data - ne treba u git-u, pravi se sam pri pokretanju
+server/pgdata/
+
+# Uploadovane slike - runtime podaci, ne izvorni kod
+server/uploads/*
+!server/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
