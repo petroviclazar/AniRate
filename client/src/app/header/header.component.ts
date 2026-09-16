@@ -69,7 +69,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.brojNaslova = animeList.length;
 
     // map: izvuci samo ocene u poseban niz
-    const ocene = animeList.map((anime) => anime.rating ?? 0);
+    const ocene = animeList.map((anime) => Number(anime.rating) || 0);
 
     // reduce: saberi sve ocene da bismo izracunali prosek,
     // i odvojeno saberi ukupan broj epizoda u celom katalogu
@@ -86,7 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     animeList.forEach((anime) => {
       if (
         trenutnoNajbolji === null ||
-        (anime.rating ?? 0) > (trenutnoNajbolji.rating ?? 0)
+        Number(anime.rating) > Number(trenutnoNajbolji.rating ?? 0)
       ) {
         trenutnoNajbolji = anime;
       }
