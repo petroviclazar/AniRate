@@ -9,6 +9,7 @@ import {
 import { Anime } from '../anime/anime.entity';
 import { AnimeRating } from 'src/animerating/animerating.entity';
 import { AnimeKomentar } from 'src/animekomentari/animekomentar.entity';
+import { UserRole } from './user-role.enum';
 
 @Entity()
 export class User {
@@ -31,8 +32,8 @@ export class User {
   @JoinTable()
   animeList: Anime[];
 
-  @Column({ nullable: true })
-  role: string | null;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.MEMBER })
+  role: UserRole;
   @OneToMany(() => AnimeRating, (rating) => rating.user)
   animeRatings: AnimeRating[];
   @OneToMany(() => AnimeKomentar, (komentar) => komentar.user)

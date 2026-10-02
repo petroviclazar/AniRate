@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AnimeKomentar } from '../store/types/animekomentar.module';
+import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +21,7 @@ export class AnimeKomentarService {
     };
 
     return this.http.post<AnimeKomentar[]>(
-      `http://localhost:3000/komentar/addKomentar/${id}/${id1}`,
+      `${environment.apiUrl}/komentar/addKomentar/${id}/${id1}`,
       animeRatingData,
       {
         withCredentials: true,
@@ -29,7 +30,7 @@ export class AnimeKomentarService {
   }
   getKomentar(id: number): Observable<AnimeKomentar[]> {
     return this.http.get<AnimeKomentar[]>(
-      ` http://localhost:3000/komentar/getKomentar/${id}`,
+      `${environment.apiUrl}/komentar/getKomentar/${id}`,
       {
         withCredentials: true,
       }
@@ -37,7 +38,7 @@ export class AnimeKomentarService {
   }
   deleteKomentar(id: number) {
     return this.http.delete<number>(
-      `http://localhost:3000/komentar/deleteKomentar/${id}`,
+      `${environment.apiUrl}/komentar/deleteKomentar/${id}`,
       {
         withCredentials: true,
       }

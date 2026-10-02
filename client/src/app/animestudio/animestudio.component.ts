@@ -32,6 +32,11 @@ import {
 } from '@angular/forms';
 import { UserState } from '../store/types/user.interface';
 import { selectUserFeature } from '../store/selectors/user.selectors';
+import { UserRole } from '../store/types/user-role.enum';
+import { AnimeStudijaService } from '../services/animeStudija.service';
+import * as StudioMembershipActions from '../store/actions/studioMembership.actions';
+import { pendingMembershipRequestsSelector } from '../store/selectors/studioMembership.selectors';
+import { StudioMembershipModel } from '../store/types/studio-membership.module';
 
 @Component({
   selector: 'app-animestudio',
@@ -57,6 +62,16 @@ export class AnimestudioComponent implements OnInit {
   };
   authenticated = true;
   isLoggedIn!: boolean;
+  isAdmin = false;
+  isOwner = false;
+  currentUserId: number | undefined;
+  studioId!: number;
+  zahtevPoslat = false;
+  pendingRequests$: Observable<StudioMembershipModel[]>;
+  assignOwnerUserId: number | null = null;
+  private lastRequestedRequestsFor: number | null = null;
+  private currentStudio: AnimeStudioModel | null = null;
+
   constructor(
     private store: Store<AnimeStudioState>,
     private store1: Store<AnimeState>,
@@ -65,7 +80,8 @@ export class AnimestudioComponent implements OnInit {
     private authService: AuthService,
     private uploadService: UploadService,
     private formBuilder: FormBuilder,
-    private store3: Store<UserState>
+    private store3: Store<UserState>,
+    private animeStudijaService: AnimeStudijaService
   ) {
     this.isLoading$ = this.store.select(isLoadingSelector);
     this.error$ = this.store.select(errorSelector);
@@ -73,6 +89,7 @@ export class AnimestudioComponent implements OnInit {
     this.isLoading1$ = this.store.select(animestudioSelectorLoading);
     this.error1$ = this.store.select(animestudioSelectorError);
     this.anime1$ = this.store.select(animestudioSelectorAnime);
+    this.pendingRequests$ = this.store3.select(pendingMembershipRequestsSelector);
   }
 
   async ngOnInit(): Promise<void> {
@@ -82,16 +99,100 @@ export class AnimestudioComponent implements OnInit {
       episodeCount: new FormControl('', Validators.required),
       title: new FormControl('', Validators.required),
     });
-    this.store.pipe(select(selectUserFeature)).subscribe((userState) => {
+    this.store3.pipe(select(selectUserFeature)).subscribe((userState) => {
       this.isLoggedIn = userState.isLoggedIn;
       this.authenticated = userState.isLoggedIn;
+      this.isAdmin = userState.user?.role === UserRole.ADMIN;
+      this.currentUserId = userState.user?.id;
+      this.osveziVlasnistvo();
     });
     this.route.params.subscribe(async (params) => {
       const id = params['id'];
+      this.studioId = id;
 
       this.store.dispatch(AnimeStudioActions.getAnimeStudio({ id }));
       this.store1.dispatch(AnimeiActions.getAnimeForStudio({ id }));
     });
+    this.animeStudio$.subscribe((animeStudio) => {
+      this.currentStudio = animeStudio;
+      this.osveziVlasnistvo();
+    });
+  }
+
+  // Proverava da li je ulogovani korisnik vlasnik trenutnog studija i,
+  // ako jeste (ili je admin), ucitava zahteve za clanstvo za taj studio
+  // (samo jednom po studiju, ne na svaku promenu stanja).
+  private osveziVlasnistvo(): void {
+    this.isOwner =
+      !!this.currentStudio?.owner &&
+      !!this.currentUserId &&
+      this.currentStudio.owner.id === this.currentUserId;
+
+    if (
+      (this.isOwner || this.isAdmin) &&
+      this.studioId &&
+      this.lastRequestedRequestsFor !== this.studioId
+    ) {
+      this.lastRequestedRequestsFor = this.studioId;
+      this.store.dispatch(
+        StudioMembershipActions.getMembershipRequests({
+          studioId: this.studioId,
+        })
+      );
+    }
+  }
+
+  postaniClan(): void {
+    if (!this.studioId) {
+      return;
+    }
+    this.zahtevPoslat = true;
+    this.store.dispatch(
+      StudioMembershipActions.requestMembership({ studioId: this.studioId })
+    );
+  }
+
+  odobriZahtev(requestId: number | undefined): void {
+    if (requestId === undefined || !this.studioId) {
+      return;
+    }
+    this.store.dispatch(
+      StudioMembershipActions.approveRequest({
+        requestId,
+        studioId: this.studioId,
+      })
+    );
+  }
+
+  odbijZahtev(requestId: number | undefined): void {
+    if (requestId === undefined || !this.studioId) {
+      return;
+    }
+    this.store.dispatch(
+      StudioMembershipActions.rejectRequest({
+        requestId,
+        studioId: this.studioId,
+      })
+    );
+  }
+
+  dodeliVlasnika(): void {
+    if (!this.assignOwnerUserId || !this.studioId) {
+      return;
+    }
+    this.animeStudijaService
+      .assignOwner(this.studioId, this.assignOwnerUserId)
+      .subscribe({
+        next: () => {
+          this.assignOwnerUserId = null;
+          this.store.dispatch(
+            AnimeStudioActions.getAnimeStudio({ id: this.studioId })
+          );
+        },
+        error: (err) => {
+          alert(err.error?.message || 'Dodela vlasnika nije uspela');
+        },
+      });
   }
   closePopup() {
     throw new Error('Method not implemented.');

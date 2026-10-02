@@ -7,6 +7,7 @@ import {
   AnimeRating,
   AnimeRatingModel,
 } from '../store/types/animerating.module';
+import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -23,7 +24,7 @@ export class AnimeRatingService {
     };
 
     return this.http.post<AnimeRating[]>(
-      `http://localhost:3000/animerating/addAnime5/${id}/${id1}`,
+      `${environment.apiUrl}/animerating/addAnime5/${id}/${id1}`,
       animeRatingData,
       {
         withCredentials: true,

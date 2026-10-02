@@ -8,6 +8,8 @@ import {
   headerSelectorLoading,
   headerSelectorError,
   headerSelectorAnime,
+  headerSelectorTotal,
+  headerSelectorCurrentPage,
 } from '../store/selectors/animei.selector';
 import * as AnimeiActions from '../store/actions/animei.actions';
 
@@ -20,7 +22,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoading$?: Observable<boolean>;
   error$?: Observable<string | null>;
   anime$?: Observable<Anime[]>;
+  total$?: Observable<number>;
   searchText: string = '';
+
+  // Broj vec ucitanih naslova u store-u (ne u celom katalogu na serveru) -
+  // koristi se da se dugme "Ucitaj jos" sakrije kad vise nema sta da se ucita.
+  ucitanihNaslova = 0;
+  trenutnaStranica = 1;
 
   brojNaslova = 0;
   prosecnaOcena = 0;
@@ -38,17 +46,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.store.select(headerSelectorLoading);
     this.error$ = this.store.select(headerSelectorError);
     this.anime$ = this.store.select(headerSelectorAnime);
+    this.total$ = this.store.select(headerSelectorTotal);
   }
 
   ngOnInit(): void {
-    this.store.dispatch(AnimeiActions.getAnimei());
+    this.store.dispatch(AnimeiActions.getAnimei({ page: 1 }));
 
     // takeUntil drzi pretplatu aktivnom sve dok unistavanje$ ne emituje,
     // sto se desava u ngOnDestroy. Bez ovoga bi pretplata na store
     // ostala aktivna i posle napustanja stranice.
     this.anime$
       ?.pipe(takeUntil(this.unistavanje$))
-      .subscribe((animeList) => this.izracunajStatistiku(animeList));
+      .subscribe((animeList) => {
+        this.ucitanihNaslova = animeList.length;
+        this.izracunajStatistiku(animeList);
+      });
+
+    this.store
+      .select(headerSelectorCurrentPage)
+      .pipe(takeUntil(this.unistavanje$))
+      .subscribe((page) => (this.trenutnaStranica = page));
+  }
+
+  // Ucitava sledecu stranicu i DODAJE je postojecem katalogu u store-u
+  // (reducer koristi adapter.addMany za page > 1) - u store-u se u svakom
+  // trenutku drzi samo ono sto je korisnik zaista pogledao, ne ceo katalog.
+  ucitajJos(): void {
+    this.store.dispatch(
+      AnimeiActions.getAnimei({ page: this.trenutnaStranica + 1 })
+    );
   }
 
   ngOnDestroy(): void {

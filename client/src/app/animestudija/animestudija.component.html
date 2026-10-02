@@ -1,5 +1,5 @@
 <body>
-  <ng-container *ngIf="authenticated">
+  <ng-container *ngIf="isAdmin">
     <div class="add-anime-form">
       <h3>Dodaj novi studio</h3>
       <form (ngSubmit)="addAnimeStudio()" [formGroup]="form">
@@ -28,6 +28,9 @@
       </form>
     </div>
   </ng-container>
+  <p *ngIf="isLoggedIn && !isAdmin" class="admin-note">
+    Samo administrator moze da kreira nove anime studije.
+  </p>
 
   <div class="animestudija-container">
     <h2 class="tekstzaStudio">ANIME STUDIJA</h2>

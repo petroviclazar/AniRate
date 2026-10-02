@@ -11,9 +11,16 @@ export class AnimeiEffects {
   getAnimei$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AnimeiActions.getAnimei),
-      mergeMap(() => {
-        return this.animeService.getAllAnime().pipe(
-          map((mesta) => AnimeiActions.getAnimeiSuccess({ mesta })),
+      mergeMap((action) => {
+        const page = action.page ?? 1;
+        return this.animeService.getAllAnime(page).pipe(
+          map((res) =>
+            AnimeiActions.getAnimeiSuccess({
+              mesta: res.data,
+              total: res.total,
+              page: res.page,
+            })
+          ),
           catchError((error) =>
             of(
               AnimeiActions.getAnimeiFailure({

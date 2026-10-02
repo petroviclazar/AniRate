@@ -47,6 +47,15 @@
         </a>
       </div>
     </div>
+    <div class="load-more-container" *ngIf="(total$ | async) as total">
+      <button
+        *ngIf="ucitanihNaslova < total"
+        class="btn btn-purple"
+        (click)="ucitajJos()"
+      >
+        Učitaj još ({{ ucitanihNaslova }} / {{ total }})
+      </button>
+    </div>
   </div>
 </div>
 <!-- <button (click)="prikazi()">DUGME</button> -->

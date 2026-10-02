@@ -337,3 +337,9 @@ body {
   max-height: 250px;
   background-position: center;
 }
+
+.admin-note {
+  text-align: center;
+  opacity: 0.8;
+  margin: 10px 0;
+}

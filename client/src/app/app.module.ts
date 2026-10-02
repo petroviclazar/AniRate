@@ -40,6 +40,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { reducer10 } from './store/reducers/animekomentar.reducers';
 import { AnimeKomentarEffects } from './store/effects/animekomentar.effects';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { studioMembershipReducer } from './store/reducers/studioMembership.reducers';
+import { StudioMembershipEffects } from './store/effects/studioMembership.effects';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     FilterPipe,
     ProfileComponent,
     NotFoundComponent,
-  ], // Dodajte RegistrationComponent ovde
+  ], 
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -73,6 +75,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     StoreModule.forFeature('Anime', reducer4),
     StoreModule.forFeature('AnimeRating', reducer8),
     StoreModule.forFeature('AnimeKomentar', reducer10),
+    StoreModule.forFeature('StudioMembership', studioMembershipReducer),
     StoreModule.forRoot({ user: reducers }, {}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -87,8 +90,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
       AnimeEffects,
       AnimeRatingEffects,
       AnimeKomentarEffects,
+      StudioMembershipEffects,
     ]),
-  ], // Dodajte FormsModule ovde
+  ], 
   providers: [AuthService, DatePipe],
   bootstrap: [AppComponent],
 })

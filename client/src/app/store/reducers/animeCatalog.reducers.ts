@@ -12,6 +12,8 @@ export const catalogInitialState: AnimeiState = catalogAdapter.getInitialState(
     isLoading: false,
     error: null,
     update: false,
+    total: 0,
+    currentPage: 1,
   }
 );
 
@@ -22,7 +24,20 @@ export const animeCatalogReducer = createReducer(
     isLoading: true,
   })),
   on(animeiActions.getAnimeiSuccess, (state, action) => {
-    return catalogAdapter.setAll(action.mesta, { ...state, isLoading: false });
+    // Prva stranica zamenjuje ceo katalog (setAll), a svaka sledeca se
+    // samo dodaje postojecim entitetima (addMany) - tako se u NgRx store-u
+    // u svakom trenutku drzi samo ono sto je korisnik zaista ucitao
+    // ("Ucitaj jos"), a ne ceo katalog odjednom.
+    const noviState =
+      action.page === 1
+        ? catalogAdapter.setAll(action.mesta, state)
+        : catalogAdapter.addMany(action.mesta, state);
+    return {
+      ...noviState,
+      isLoading: false,
+      total: action.total,
+      currentPage: action.page,
+    };
   }),
   on(animeiActions.getAnimeiFailure, (state, action) => ({
     ...state,

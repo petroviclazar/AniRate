@@ -1,10 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import { AnimeModel } from '../types/anime.module';
 
-export const getAnimei = createAction('[Anime Page] Get Anime');
+export const getAnimei = createAction(
+  '[Anime Page] Get Anime',
+  props<{ page?: number }>()
+);
 export const getAnimeiSuccess = createAction(
   '[Anime Page] Get Anime Success',
-  props<{ mesta: AnimeModel[] }>()
+  props<{ mesta: AnimeModel[]; total: number; page: number }>()
 );
 export const getAnimeiFailure = createAction(
   '[Anime Page] Get Anime Failure',

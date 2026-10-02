@@ -32,8 +32,18 @@ export class AnimeService {
     return this.animeRepository.save(anime);
   }
 
-  async getAllAnime(): Promise<Anime[]> {
-    return this.animeRepository.find();
+  // Vraca samo jednu "stranicu" kataloga (skip/take na bazi), umesto da se
+  // ceo katalog uvek povlaci - klijent je onda drzi samo ono sto je
+  // korisnik zaista ucitao ("Ucitaj jos"), ne ceo katalog u NgRx store-u.
+  async getAllAnime(
+    page = 1,
+    limit = 20,
+  ): Promise<{ data: Anime[]; total: number; page: number; limit: number }> {
+    const [data, total] = await this.animeRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return { data, total, page, limit };
   }
   async getAnimeById(id: number): Promise<Anime | undefined> {
     return this.animeRepository.findOneById(id);

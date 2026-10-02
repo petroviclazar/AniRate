@@ -20,6 +20,14 @@ export const headerSelectorError = createSelector(
   selectAnimeCatalogFeature,
   (state: AnimeiState) => state.error
 );
+export const headerSelectorTotal = createSelector(
+  selectAnimeCatalogFeature,
+  (state: AnimeiState) => state.total
+);
+export const headerSelectorCurrentPage = createSelector(
+  selectAnimeCatalogFeature,
+  (state: AnimeiState) => state.currentPage
+);
 
 // --- Anime po studiju (AnimestudioComponent) ---
 export const selectAnimeByStudioFeature =

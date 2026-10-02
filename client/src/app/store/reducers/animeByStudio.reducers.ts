@@ -13,6 +13,8 @@ export const byStudioInitialState: AnimeiState = byStudioAdapter.getInitialState
     isLoading: false,
     error: null,
     update: false,
+    total: 0,
+    currentPage: 1,
   }
 );
 

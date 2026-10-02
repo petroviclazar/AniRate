@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class UploadService {
 
     const response = await firstValueFrom(
       this.http.post<{ url: string }>(
-        'http://localhost:3000/upload/photo',
+        `${environment.apiUrl}/upload/photo`,
         formData
       )
     );

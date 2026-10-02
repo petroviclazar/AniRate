@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AnimeService } from './anime.service';
 import { Anime } from './anime.entity';
@@ -23,8 +24,14 @@ export class AnimeController {
   }
 
   @Get('getAnime')
-  async getAllAnime(): Promise<Anime[]> {
-    return this.animeService.getAllAnime();
+  async getAllAnime(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.animeService.getAllAnime(
+      page ? parseInt(page, 10) : 1,
+      limit ? parseInt(limit, 10) : 20,
+    );
   }
   @Get('getAnimeByStudio/:id')
   getAnimeByStudio(@Param('id') id: number) {

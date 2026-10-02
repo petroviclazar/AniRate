@@ -1,8 +1,10 @@
+import { UserRole } from './user-role.enum';
+
 export interface User {
   id?: number;
   username?: string;
   password?: string;
-  role?: string;
+  role?: UserRole;
   photo?: string;
   email?: string;
 }
@@ -10,7 +12,7 @@ export class UserModel implements User {
   id?: number;
   username?: string;
   password?: string;
-  role?: string;
+  role?: UserRole;
   photo?: string | undefined;
   email?: string;
 
@@ -19,12 +21,14 @@ export class UserModel implements User {
     username?: string,
     password?: string,
     email?: string,
-    photo?: string
+    photo?: string,
+    role?: UserRole
   ) {
     this.id = id;
     this.username = username;
     this.password = password;
     this.email = email;
     this.photo = photo;
+    this.role = role;
   }
 }

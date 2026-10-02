@@ -12,6 +12,7 @@ import { NotFoundException } from '@nestjs/common';
 import { AnimeRating } from 'src/animerating/animerating.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from './user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -45,9 +46,13 @@ export class UserService {
 
     console.log(user);
     const hashedPassword = await bcrypt.hash(user.password, 10);
+    // Uloga se UVEK postavlja na serveru, nikad se ne prihvata direktno od
+    // klijenta - u suprotnom bi bilo ko mogao da se registruje kao admin
+    // samo tako sto bi u registracioni zahtev dodao "role": "admin".
     return this.userRepository.save({
       ...user,
       password: hashedPassword,
+      role: UserRole.MEMBER,
     });
   }
 

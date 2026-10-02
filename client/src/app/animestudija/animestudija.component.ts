@@ -19,6 +19,7 @@ import {
 import { UploadService } from '../services/upload.service';
 import { UserState } from '../store/types/user.interface';
 import { selectUserFeature } from '../store/selectors/user.selectors';
+import { UserRole } from '../store/types/user-role.enum';
 @Component({
   selector: 'app-animestudija',
   templateUrl: './animestudija.component.html',
@@ -42,6 +43,7 @@ export class AnimestudijaComponent implements OnInit {
   selectedImage: File | null = null;
   authenticated = true;
   isLoggedIn!: boolean;
+  isAdmin = false;
   constructor(
     private animeStudijaService: AnimeStudijaService,
     private store: Store<AnimeStudijaState>,
@@ -61,9 +63,10 @@ export class AnimestudijaComponent implements OnInit {
       name: new FormControl('', Validators.required),
       slika: new FormControl('', Validators.required),
     });
-    this.store.pipe(select(selectUserFeature)).subscribe((userState) => {
+    this.store3.pipe(select(selectUserFeature)).subscribe((userState) => {
       this.isLoggedIn = userState.isLoggedIn;
       this.authenticated = userState.isLoggedIn;
+      this.isAdmin = userState.user?.role === UserRole.ADMIN;
     });
     this.store.dispatch(AnimeStudijaActions.getAnimeStudija());
   }

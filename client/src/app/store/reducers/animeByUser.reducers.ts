@@ -11,6 +11,8 @@ export const byUserInitialState: AnimeiState = byUserAdapter.getInitialState({
   isLoading: false,
   error: null,
   update: false,
+  total: 0,
+  currentPage: 1,
 });
 
 export const animeByUserReducer = createReducer(

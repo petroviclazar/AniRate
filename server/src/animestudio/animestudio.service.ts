@@ -1,19 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
-import { AnimeService } from 'src/anime/anime.service';
 import { AnimeStudio } from './animestudio.entity';
+import { UserRole } from '../user/user-role.enum';
+
 @Injectable()
 export class AnimeStudioService {
   constructor(
     @InjectRepository(AnimeStudio)
-    private readonly animeStudioRepository: Repository<AnimeStudio>, // private readonly animeService: AnimeService,
+    private readonly animeStudioRepository: Repository<AnimeStudio>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async getAllAnimeStudio(): Promise<AnimeStudio[]> {
-    console.log(this.animeStudioRepository.find());
-    return await this.animeStudioRepository.find();
+    const studija = await this.animeStudioRepository.find();
+    return studija.map((s) => this.sanitize(s));
   }
   async vratiAnimeStudio(id: number): Promise<AnimeStudio> {
     return this.animeStudioRepository.findOneById(id);
@@ -26,6 +29,43 @@ export class AnimeStudioService {
     return this.animeStudioRepository.save(animeStudio);
   }
   async getAnimeStudio(id: number): Promise<AnimeStudio> {
-    return this.animeStudioRepository.findOneById(id);
+    const studio = await this.animeStudioRepository.findOneById(id);
+    return this.sanitize(studio);
+  }
+
+  // Samo admin sme da dodeli vlasnika studija (proveravano u kontroleru
+  // preko RolesGuard-a). Dodela vlasnistva promovise korisnika u
+  // STUDIO_OWNER ulogu - ALI samo ako je trenutno obican MEMBER. Admin koji
+  // dobije vlasnistvo nad studijem ostaje admin (ne sme da izgubi svoju
+  // ulogu samo zato sto poseduje studio), a isto tako ne diramo ulogu ako
+  // je vec STUDIO_OWNER (npr. vlasnik dva studija).
+  async assignOwner(studioId: number, userId: number): Promise<AnimeStudio> {
+    const studio = await this.animeStudioRepository.findOneById(studioId);
+    if (!studio) {
+      throw new NotFoundException(`Studio sa ID ${studioId} nije pronadjen`);
+    }
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException(`Korisnik sa ID ${userId} nije pronadjen`);
+    }
+
+    studio.owner = user;
+    await this.animeStudioRepository.save(studio);
+
+    if (user.role === UserRole.MEMBER) {
+      user.role = UserRole.STUDIO_OWNER;
+      await this.userRepository.save(user);
+    }
+
+    return this.getAnimeStudio(studioId);
+  }
+
+  // Ne vracamo hesiranu lozinku vlasnika studija klijentu.
+  private sanitize(studio: AnimeStudio | null): AnimeStudio {
+    if (studio?.owner) {
+      const { password, ...ownerBezSifre } = studio.owner as any;
+      studio.owner = ownerBezSifre;
+    }
+    return studio as AnimeStudio;
   }
 }

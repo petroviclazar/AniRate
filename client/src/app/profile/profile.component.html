@@ -19,6 +19,7 @@
       <div class="user-details">
         <h2>Korisnik: {{ user?.username }}</h2>
         <p>Email: {{ user?.email }}</p>
+        <p *ngIf="user?.role">Uloga: {{ user?.role }}</p>
       </div>
     </div>
   </div>

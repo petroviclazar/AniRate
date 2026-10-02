@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { take, zip } from 'rxjs';
 import { AnimeService } from '../services/anime.service';
 import { Anime } from '../store/types/anime.module';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-compare',
@@ -31,7 +32,7 @@ export class CompareComponent {
     }
     try {
       const odgovor = await fetch(
-        `http://localhost:3000/anime/getAnimeById/${id}`,
+        `${environment.apiUrl}/anime/getAnimeById/${id}`,
         { credentials: 'include' }
       );
       if (!odgovor.ok) {

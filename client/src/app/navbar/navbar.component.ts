@@ -6,6 +6,7 @@ import { Store, select } from '@ngrx/store';
 import { UserState } from '../store/types/user.interface';
 import { selectUserFeature } from '../store/selectors/user.selectors';
 import * as UserActions from '../store/actions/user.actions';
+import { UserRole } from '../store/types/user-role.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,7 @@ export class NavbarComponent implements OnInit {
   user!: User | null;
   isLoggedIn!: boolean;
   user1: UserModel;
+  isAdmin = false;
   handleNavBar() {
     console.log(this.logoImg);
     this.toggleMenu = !this.toggleMenu;
@@ -45,11 +47,15 @@ export class NavbarComponent implements OnInit {
         this.user1 = new UserModel(
           userState.user.id,
           userState.user.username,
-          userState.user.password
+          userState.user.password,
+          userState.user.email,
+          userState.user.photo,
+          userState.user.role
         );
       } else {
         this.user1 = new UserModel();
       }
+      this.isAdmin = this.user1.role === UserRole.ADMIN;
     });
   }
 

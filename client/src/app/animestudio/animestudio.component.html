@@ -1,6 +1,35 @@
 <div *ngIf="animeStudio$ | async as animeStudio" class="anime-naslov">
   <h2>{{ animeStudio.name }}</h2>
+  <p *ngIf="animeStudio.owner">Vlasnik studija: {{ animeStudio.owner.username }}</p>
 </div>
+
+<div class="membership-section">
+  <button
+    *ngIf="isLoggedIn && !isOwner && !isAdmin"
+    class="btn btn-purple"
+    [disabled]="zahtevPoslat"
+    (click)="postaniClan()"
+  >
+    {{ zahtevPoslat ? 'Zahtev poslat' : 'Postani clan' }}
+  </button>
+
+  <div *ngIf="isOwner || isAdmin" class="membership-requests">
+    <h3>Zahtevi za clanstvo</h3>
+    <div *ngFor="let zahtev of pendingRequests$ | async" class="membership-request-item">
+      <span>{{ zahtev.user?.username }}</span>
+      <button class="btn btn-purple" (click)="odobriZahtev(zahtev.id)">Odobri</button>
+      <button class="btn btn-purple" (click)="odbijZahtev(zahtev.id)">Odbij</button>
+    </div>
+    <p *ngIf="(pendingRequests$ | async)?.length === 0">Nema zahteva na cekanju.</p>
+  </div>
+
+  <div *ngIf="isAdmin" class="assign-owner-form">
+    <h3>Dodeli vlasnika studija</h3>
+    <input type="number" placeholder="ID korisnika" [(ngModel)]="assignOwnerUserId" [ngModelOptions]="{standalone: true}" />
+    <button class="btn btn-purple" (click)="dodeliVlasnika()">Dodeli</button>
+  </div>
+</div>
+
 <ng-container *ngIf="authenticated">
   <div class="add-anime-form">
     <h2>Dodaj novi anime</h2>

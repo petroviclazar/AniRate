@@ -11,6 +11,7 @@ import { AnimeKomentarModule } from './animekomentari/animekomentar.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggedGuard } from './guards/logged.guard';
 import { UploadModule } from './upload/upload.module';
+import { StudioMembershipModule } from './studio-membership/studio-membership.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UploadModule } from './upload/upload.module';
     AnimeRatingModule,
     AnimeKomentarModule,
     UploadModule,
+    StudioMembershipModule,
   ],
   controllers: [],
   providers: [LoggedGuard],

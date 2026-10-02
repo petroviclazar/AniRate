@@ -123,7 +123,8 @@ export class ProfileComponent implements OnInit {
           userObject.username,
           userObject.password,
           userObject.email,
-          userObject.photo
+          userObject.photo,
+          userObject.role
         );
         this.user.photo = userObject.photo;
         this.userImageUrl = userObject.photo;
