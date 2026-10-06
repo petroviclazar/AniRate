@@ -39,26 +39,34 @@ export class AnimeStudioService {
   // dobije vlasnistvo nad studijem ostaje admin (ne sme da izgubi svoju
   // ulogu samo zato sto poseduje studio), a isto tako ne diramo ulogu ako
   // je vec STUDIO_OWNER (npr. vlasnik dva studija).
-  async assignOwner(studioId: number, userId: number): Promise<AnimeStudio> {
-    const studio = await this.animeStudioRepository.findOneById(studioId);
-    if (!studio) {
-      throw new NotFoundException(`Studio sa ID ${studioId} nije pronadjen`);
-    }
-    const user = await this.userRepository.findOneById(userId);
-    if (!user) {
-      throw new NotFoundException(`Korisnik sa ID ${userId} nije pronadjen`);
-    }
+  async assignOwner(studioId: number, userId: number) {
+  const studio = await this.animeStudioRepository.findOneById(studioId);
+  const user = await this.userRepository.findOneById(userId);
 
-    studio.owner = user;
-    await this.animeStudioRepository.save(studio);
+  const prethodniVlasnik = studio.owner;          // 1. zapamti starog vlasnika
 
-    if (user.role === UserRole.MEMBER) {
-      user.role = UserRole.STUDIO_OWNER;
-      await this.userRepository.save(user);
-    }
+  studio.owner = user;
+  await this.animeStudioRepository.save(studio);
 
-    return this.getAnimeStudio(studioId);
+  if (user.role === UserRole.MEMBER) {
+    user.role = UserRole.STUDIO_OWNER;
+    await this.userRepository.save(user);
   }
+
+  // 2. ako stari vlasnik više nema nijedan studio, vrati ga u member
+  if (prethodniVlasnik && prethodniVlasnik.id !== user.id
+      && prethodniVlasnik.role === UserRole.STUDIO_OWNER) {
+    const brojStudija = await this.animeStudioRepository.count({
+      where: { owner: { id: prethodniVlasnik.id } },
+    });
+    if (brojStudija === 0) {
+      prethodniVlasnik.role = UserRole.MEMBER;
+      await this.userRepository.save(prethodniVlasnik);
+    }
+  }
+
+  return this.getAnimeStudio(studioId);
+}
 
   // Ne vracamo hesiranu lozinku vlasnika studija klijentu.
   private sanitize(studio: AnimeStudio | null): AnimeStudio {

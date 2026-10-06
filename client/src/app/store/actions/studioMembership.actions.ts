@@ -27,6 +27,19 @@ export const getMembershipRequestsFailure = createAction(
   props<{ error: string }>()
 );
 
+export const getStudioMembers = createAction(
+  '[AnimeStudio Page] Get Studio Members',
+  props<{ studioId: number }>()
+);
+export const getStudioMembersSuccess = createAction(
+  '[StudioMembership API] Get Studio Members Success',
+  props<{ members: StudioMembershipModel[] }>()
+);
+export const getStudioMembersFailure = createAction(
+  '[StudioMembership API] Get Studio Members Failure',
+  props<{ error: string }>()
+);
+
 export const approveRequest = createAction(
   '[AnimeStudio Page] Approve Membership Request',
   props<{ requestId: number; studioId: number }>()

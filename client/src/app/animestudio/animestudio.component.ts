@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs'; // Dodat forkJoin
+import { Observable, combineLatest, forkJoin, map, of } from 'rxjs'; // Dodat forkJoin
 import { AnimeStudioModel } from '../store/types/animestudio.module';
 import { AnimeStudioState } from '../store/types/animestudio.interface';
 import { Store, select } from '@ngrx/store';
@@ -31,11 +31,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserState } from '../store/types/user.interface';
-import { selectUserFeature } from '../store/selectors/user.selectors';
+import {
+  selectUserFeature,
+  userSelector,
+} from '../store/selectors/user.selectors';
 import { UserRole } from '../store/types/user-role.enum';
 import { AnimeStudijaService } from '../services/animeStudija.service';
 import * as StudioMembershipActions from '../store/actions/studioMembership.actions';
-import { pendingMembershipRequestsSelector } from '../store/selectors/studioMembership.selectors';
+import {
+  membersForStudioSelector,
+  pendingRequestsForStudioSelector,
+} from '../store/selectors/studioMembership.selectors';
 import { StudioMembershipModel } from '../store/types/studio-membership.module';
 
 @Component({
@@ -67,7 +73,11 @@ export class AnimestudioComponent implements OnInit {
   currentUserId: number | undefined;
   studioId!: number;
   zahtevPoslat = false;
-  pendingRequests$: Observable<StudioMembershipModel[]>;
+  pendingRequests$: Observable<StudioMembershipModel[]> = of([]);
+  members$: Observable<StudioMembershipModel[]> = of([]);
+  // Da li je ulogovani korisnik vec clan ovog studija (racuna se iz liste
+  // clanova, pa ostaje tacno i posle osvezavanja stranice).
+  isMember$: Observable<boolean> = of(false);
   assignOwnerUserId: number | null = null;
   private lastRequestedRequestsFor: number | null = null;
   private currentStudio: AnimeStudioModel | null = null;
@@ -89,7 +99,6 @@ export class AnimestudioComponent implements OnInit {
     this.isLoading1$ = this.store.select(animestudioSelectorLoading);
     this.error1$ = this.store.select(animestudioSelectorError);
     this.anime1$ = this.store.select(animestudioSelectorAnime);
-    this.pendingRequests$ = this.store3.select(pendingMembershipRequestsSelector);
   }
 
   async ngOnInit(): Promise<void> {
@@ -107,8 +116,25 @@ export class AnimestudioComponent implements OnInit {
       this.osveziVlasnistvo();
     });
     this.route.params.subscribe(async (params) => {
-      const id = params['id'];
+      // Parametar rute je string, pa ga pretvaramo u broj (+) da bi poredjenje
+      // sa id-jevima iz store-a (brojevi) radilo.
+      const id = +params['id'];
       this.studioId = id;
+      this.zahtevPoslat = false;
+
+      this.pendingRequests$ = this.store3.select(
+        pendingRequestsForStudioSelector(id)
+      );
+      this.members$ = this.store3.select(membersForStudioSelector(id));
+      this.isMember$ = combineLatest([
+        this.members$,
+        this.store3.select(userSelector),
+      ]).pipe(
+        map(([clanovi, user]) => clanovi.some((c) => c.user?.id === user?.id))
+      );
+      this.store.dispatch(
+        StudioMembershipActions.getStudioMembers({ studioId: id })
+      );
 
       this.store.dispatch(AnimeStudioActions.getAnimeStudio({ id }));
       this.store1.dispatch(AnimeiActions.getAnimeForStudio({ id }));
@@ -235,4 +261,4 @@ export class AnimestudioComponent implements OnInit {
       console.log(res);
     });
   }
-}
+}

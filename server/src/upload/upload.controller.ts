@@ -40,7 +40,8 @@ export class UploadController {
       throw new BadRequestException('No file uploaded');
     }
 
-    const url = `http://localhost:3000/uploads/${file.filename}`;
+    // Adresa servera se cita iz .env (SERVER_URL), nije upisana u kod.
+    const url = `${process.env.SERVER_URL}/uploads/${file.filename}`;
     return { url };
   }
-}
+}

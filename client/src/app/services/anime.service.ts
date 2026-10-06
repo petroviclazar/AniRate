@@ -23,7 +23,7 @@ export class AnimeService {
   // umesto da se ceo katalog uvek povlaci i drzi u NgRx store-u.
   getAllAnime(
     page: number = 1,
-    limit: number = 20
+    limit: number = 5
   ): Observable<PaginatedResponse<Anime>> {
     return this.http.get<PaginatedResponse<Anime>>(
       `${environment.apiUrl}/anime/getAnime`,
@@ -74,13 +74,4 @@ export class AnimeService {
       withCredentials: true,
     });
   }
-  // updateAnime(anime: Anime): Observable<Anime> {
-  //   return this.http.put<Anime>(
-  //     ` http://localhost:3000/anime/updateAnime`,
-  //     anime,
-  //     {
-  //       withCredentials: true,
-  //     }
-  //   );
-  // }
 }

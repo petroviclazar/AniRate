@@ -18,6 +18,14 @@ export class StudioMembershipService {
     );
   }
 
+  // Lista clanova studija (odobreni zahtevi) - javna ruta.
+  getMembersForStudio(studioId: number): Observable<StudioMembershipModel[]> {
+    return this.http.get<StudioMembershipModel[]>(
+      `${environment.apiUrl}/studio-membership/${studioId}/members`,
+      { withCredentials: true }
+    );
+  }
+
   getRequestsForStudio(studioId: number): Observable<StudioMembershipModel[]> {
     return this.http.get<StudioMembershipModel[]>(
       `${environment.apiUrl}/studio-membership/${studioId}/requests`,

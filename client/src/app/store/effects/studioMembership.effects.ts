@@ -60,6 +60,26 @@ export class StudioMembershipEffects {
     )
   );
 
+  getStudioMembers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(StudioMembershipActions.getStudioMembers),
+      mergeMap((action) =>
+        this.membershipService.getMembersForStudio(action.studioId).pipe(
+          map((members) =>
+            StudioMembershipActions.getStudioMembersSuccess({ members })
+          ),
+          catchError((error) =>
+            of(
+              StudioMembershipActions.getStudioMembersFailure({
+                error: error.error?.message || error.message,
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
   approveRequest$ = createEffect(() =>
     this.actions$.pipe(
       ofType(StudioMembershipActions.approveRequest),

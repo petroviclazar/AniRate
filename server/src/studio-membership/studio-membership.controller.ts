@@ -20,9 +20,15 @@ export class StudioMembershipController {
     return this.studioMembershipService.requestMembership(studioId, userId);
   }
 
+  // Javna ruta: lista clanova (odobrenih zahteva) studija.
+  @Get(':studioId/members')
+  async getMembers(@Param('studioId') studioId: number) {
+    return this.studioMembershipService.getMembersForStudio(studioId);
+  }
+
   // Ownership provera je unutar servisa (ne RolesGuard-om), jer nije
   // dovoljno da je korisnik STUDIO_OWNER uopste - mora biti vlasnik BAS
-  // ovog studija.
+  // ovog studija (ili admin). Ulogu citamo iz JWT-a (request.user.role).
   @Get(':studioId/requests')
   @UseGuards(LoggedGuard)
   async getRequests(
@@ -30,9 +36,11 @@ export class StudioMembershipController {
     @Req() req: Request,
   ) {
     const userId = (req as any).user.sub;
+    const role = (req as any).user.role;
     return this.studioMembershipService.getRequestsForStudio(
       studioId,
       userId,
+      role,
     );
   }
 
@@ -43,7 +51,8 @@ export class StudioMembershipController {
     @Req() req: Request,
   ) {
     const userId = (req as any).user.sub;
-    return this.studioMembershipService.approveRequest(requestId, userId);
+    const role = (req as any).user.role;
+    return this.studioMembershipService.approveRequest(requestId, userId, role);
   }
 
   @Post('requests/:requestId/reject')
@@ -53,6 +62,7 @@ export class StudioMembershipController {
     @Req() req: Request,
   ) {
     const userId = (req as any).user.sub;
-    return this.studioMembershipService.rejectRequest(requestId, userId);
+    const role = (req as any).user.role;
+    return this.studioMembershipService.rejectRequest(requestId, userId, role);
   }
 }

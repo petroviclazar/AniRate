@@ -6,13 +6,14 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
+  // Adresa frontenda se cita iz .env (CLIENT_URL), nije upisana u kod.
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: process.env.CLIENT_URL,
     credentials: true,
   });
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
-bootstrap();
+bootstrap();

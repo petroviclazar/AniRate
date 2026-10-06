@@ -4,14 +4,28 @@
 </div>
 
 <div class="membership-section">
-  <button
-    *ngIf="isLoggedIn && !isOwner && !isAdmin"
-    class="btn btn-purple"
-    [disabled]="zahtevPoslat"
-    (click)="postaniClan()"
-  >
-    {{ zahtevPoslat ? 'Zahtev poslat' : 'Postani clan' }}
-  </button>
+  <ng-container *ngIf="isLoggedIn && !isOwner && !isAdmin">
+    <p *ngIf="isMember$ | async; else dugmeClan">Clan si ovog studija.</p>
+    <ng-template #dugmeClan>
+      <button
+        class="btn btn-purple"
+        [disabled]="zahtevPoslat"
+        (click)="postaniClan()"
+      >
+        {{ zahtevPoslat ? 'Zahtev poslat' : 'Postani clan' }}
+      </button>
+    </ng-template>
+  </ng-container>
+
+  <div class="studio-members">
+    <h3>Clanovi studija</h3>
+    <ng-container *ngIf="members$ | async as clanovi">
+      <div *ngFor="let clan of clanovi" class="membership-request-item">
+        <a [routerLink]="['/profile', clan.user?.username]">{{ clan.user?.username }}</a>
+      </div>
+      <p *ngIf="clanovi.length === 0">Studio jos nema clanova.</p>
+    </ng-container>
+  </div>
 
   <div *ngIf="isOwner || isAdmin" class="membership-requests">
     <h3>Zahtevi za clanstvo</h3>
@@ -96,13 +110,6 @@
       </a>
     </div>
   </div>
-</div>
-<div *ngIf="animeStudio$ | async as animeStudio" class="anime-details">
-  <img
-    [src]="animeStudio.slika"
-    alt="{{ animeStudio.name }} slika"
-    class="anime-studio-image"
-  />
 </div>
 <div *ngIf="animeStudio$ | async as animeStudio" class="anime-details">
   <img

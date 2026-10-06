@@ -33,8 +33,14 @@ export const studioMembershipReducer = createReducer(
     ...state,
     isLoading: true,
   })),
+  // upsertMany (a ne setAll): u istoj kolekciji drzimo i zahteve i clanove,
+  // pa ne smemo da obrisemo jedno kad stigne drugo. Selectori ih posle
+  // razdvajaju po studiju i statusu.
   on(StudioMembershipActions.getMembershipRequestsSuccess, (state, action) =>
-    membershipAdapter.setAll(action.requests, { ...state, isLoading: false })
+    membershipAdapter.upsertMany(action.requests, {
+      ...state,
+      isLoading: false,
+    })
   ),
   on(
     StudioMembershipActions.getMembershipRequestsFailure,
@@ -44,6 +50,13 @@ export const studioMembershipReducer = createReducer(
       error: action.error,
     })
   ),
+  on(StudioMembershipActions.getStudioMembersSuccess, (state, action) =>
+    membershipAdapter.upsertMany(action.members, state)
+  ),
+  on(StudioMembershipActions.getStudioMembersFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
   on(StudioMembershipActions.approveRequestSuccess, (state, action) =>
     membershipAdapter.updateOne(
       { id: action.membership.id as number, changes: action.membership },

@@ -13,10 +13,23 @@ export const membershipRequestsSelector = createSelector(
   (state: StudioMembershipState) => selectAll(state)
 );
 
-export const pendingMembershipRequestsSelector = createSelector(
-  membershipRequestsSelector,
-  (requests) => requests.filter((r) => r.status === MembershipStatus.PENDING)
-);
+// Selectori "fabrike": primaju id studija, jer kolekcija moze da sadrzi
+// zahteve iz vise studija (ako je korisnik obisao vise stranica).
+export const pendingRequestsForStudioSelector = (studioId: number) =>
+  createSelector(membershipRequestsSelector, (requests) =>
+    requests.filter(
+      (r) =>
+        r.studio?.id === studioId && r.status === MembershipStatus.PENDING
+    )
+  );
+
+export const membersForStudioSelector = (studioId: number) =>
+  createSelector(membershipRequestsSelector, (requests) =>
+    requests.filter(
+      (r) =>
+        r.studio?.id === studioId && r.status === MembershipStatus.APPROVED
+    )
+  );
 
 export const membershipLoadingSelector = createSelector(
   selectStudioMembershipFeature,

@@ -10,6 +10,7 @@ import { StudioMembership } from './studio-membership.entity';
 import { MembershipStatus } from './membership-status.enum';
 import { AnimeStudio } from '../animestudio/animestudio.entity';
 import { User } from '../user/user.entity';
+import { UserRole } from '../user/user-role.enum';
 
 @Injectable()
 export class StudioMembershipService {
@@ -71,17 +72,22 @@ export class StudioMembershipService {
 
   // Provera vlasnistva je PO KONKRETNOM STUDIJU, ne samo po ulozi
   // STUDIO_OWNER - vlasnik studija A ne sme da odobrava zahteve za studio B.
+  // Izuzetak je ADMIN: on sme da upravlja zahtevima za svaki studio.
   private async proveriDaJeVlasnik(
     studioId: number,
     requestingUserId: number,
+    requestingUserRole: UserRole,
   ): Promise<AnimeStudio> {
     const studio = await this.animeStudioRepository.findOneById(studioId);
     if (!studio) {
       throw new NotFoundException(`Studio sa ID ${studioId} nije pronadjen`);
     }
+    if (requestingUserRole === UserRole.ADMIN) {
+      return studio;
+    }
     if (!studio.owner || studio.owner.id !== requestingUserId) {
       throw new ForbiddenException(
-        'Samo vlasnik studija moze da upravlja zahtevima za clanstvo',
+        'Samo vlasnik studija ili admin moze da upravlja zahtevima za clanstvo',
       );
     }
     return studio;
@@ -90,8 +96,13 @@ export class StudioMembershipService {
   async getRequestsForStudio(
     studioId: number,
     requestingUserId: number,
+    requestingUserRole: UserRole,
   ): Promise<StudioMembership[]> {
-    await this.proveriDaJeVlasnik(studioId, requestingUserId);
+    await this.proveriDaJeVlasnik(
+      studioId,
+      requestingUserId,
+      requestingUserRole,
+    );
     const zahtevi = await this.membershipRepository.find({
       where: { studio: { id: studioId } },
     });
@@ -101,12 +112,17 @@ export class StudioMembershipService {
   async approveRequest(
     requestId: number,
     requestingUserId: number,
+    requestingUserRole: UserRole,
   ): Promise<StudioMembership> {
     const zahtev = await this.membershipRepository.findOneById(requestId);
     if (!zahtev) {
       throw new NotFoundException('Zahtev nije pronadjen');
     }
-    await this.proveriDaJeVlasnik(zahtev.studio.id, requestingUserId);
+    await this.proveriDaJeVlasnik(
+      zahtev.studio.id,
+      requestingUserId,
+      requestingUserRole,
+    );
     zahtev.status = MembershipStatus.APPROVED;
     const sacuvan = await this.membershipRepository.save(zahtev);
     return this.sanitize(sacuvan);
@@ -115,15 +131,36 @@ export class StudioMembershipService {
   async rejectRequest(
     requestId: number,
     requestingUserId: number,
+    requestingUserRole: UserRole,
   ): Promise<StudioMembership> {
     const zahtev = await this.membershipRepository.findOneById(requestId);
     if (!zahtev) {
       throw new NotFoundException('Zahtev nije pronadjen');
     }
-    await this.proveriDaJeVlasnik(zahtev.studio.id, requestingUserId);
+    await this.proveriDaJeVlasnik(
+      zahtev.studio.id,
+      requestingUserId,
+      requestingUserRole,
+    );
     zahtev.status = MembershipStatus.REJECTED;
     const sacuvan = await this.membershipRepository.save(zahtev);
     return this.sanitize(sacuvan);
+  }
+
+  // Lista clanova studija = svi ODOBRENI zahtevi za taj studio.
+  // Javna je (vidi je svako), jer je spisak clanova deo prikaza studija.
+  async getMembersForStudio(studioId: number): Promise<StudioMembership[]> {
+    const studio = await this.animeStudioRepository.findOneById(studioId);
+    if (!studio) {
+      throw new NotFoundException(`Studio sa ID ${studioId} nije pronadjen`);
+    }
+    const clanovi = await this.membershipRepository.find({
+      where: {
+        studio: { id: studioId },
+        status: MembershipStatus.APPROVED,
+      },
+    });
+    return clanovi.map((c) => this.sanitize(c));
   }
 
   // Ne vracamo hesirane lozinke (ni podnosioca zahteva ni vlasnika studija)
