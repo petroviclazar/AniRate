@@ -38,13 +38,11 @@ export class AnimeEffects {
   postAnime$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AnimeActions.postAnime),
-      switchMap((action) => {
+      mergeMap((action) => {
         return this.animeService.postAnime(action.anime, action.id).pipe(
-          map(() =>
-            AnimeActions.postAnimeSuccess({
-              anime: action.anime, // Ispravljeno animeRating.animeRating
-            })
-          ),
+          // U store ide anime koji je vratio server (sa id-jem iz baze),
+          // a ne podaci iz forme koji id jos nemaju.
+          map((anime) => AnimeActions.postAnimeSuccess({ anime })),
           catchError((error) =>
             of(
               AnimeActions.postAnimeRFailure({

@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { Anime, AnimeModel } from '../store/types/anime.module';
 import { environment } from '../environments/environment';
-import { ANIME_PO_STRANI } from '../anime.constants';       
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -24,7 +23,7 @@ export class AnimeService {
   // umesto da se ceo katalog uvek povlaci i drzi u NgRx store-u.
   getAllAnime(
     page: number = 1,
-    limit: number = ANIME_PO_STRANI
+    limit: number = 20
   ): Observable<PaginatedResponse<Anime>> {
     return this.http.get<PaginatedResponse<Anime>>(
       `${environment.apiUrl}/anime/getAnime`,
@@ -54,7 +53,7 @@ export class AnimeService {
       }
     );
   }
-  postAnime(anime: AnimeModel, id: number): Observable<Anime[]> {
+  postAnime(anime: AnimeModel, id: number): Observable<AnimeModel> {
     const animeData = {
       name: anime.name,
       title: anime.title,
@@ -62,7 +61,7 @@ export class AnimeService {
       description: anime.description,
     };
 
-    return this.http.post<Anime[]>(
+    return this.http.post<AnimeModel>(
       `${environment.apiUrl}/anime/addAnime/${id}`,
       animeData,
       {
