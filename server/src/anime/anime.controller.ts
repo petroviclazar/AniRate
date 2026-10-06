@@ -7,20 +7,28 @@ import {
   Param,
   Put,
   Query,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { AnimeService } from './anime.service';
 import { Anime } from './anime.entity';
+import { LoggedGuard } from 'src/guards/logged.guard';
+import { Request } from 'express';
 
 @Controller('anime')
 export class AnimeController {
   constructor(private readonly animeService: AnimeService) {}
 
   @Post('addAnime/:studioId')
+  @UseGuards(LoggedGuard)
   async addAnime(
     @Body() anime: Anime,
     @Param('studioId') studioId: number,
+    @Req() req:Request
   ): Promise<Anime> {
-    return this.animeService.addAnimeWithStudio(anime, studioId);
+    const userId=(req as any).user.sub;
+    const role=(req as any).user.role;
+    return this.animeService.addAnimeWithStudio(anime, studioId,userId,role);
   }
 
   @Get('getAnime')

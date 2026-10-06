@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AnimeKomentar } from './animekomentar.entity';
 import { UserService } from 'src/user/user.service';
 import { AnimeService } from 'src/anime/anime.service';
+import { UserRole } from 'src/user/user-role.enum';
 @Injectable()
 export class AnimeKomentarService {
   constructor(
@@ -45,14 +50,30 @@ export class AnimeKomentarService {
       .leftJoinAndSelect('comment.user', 'user')
       .getMany();
   }
-  async deleteKomentar(idKomentara: number): Promise<void> {
-    const komentar = await this.animeKomentarRepository.findOneById(
-      idKomentara,
-    );
+  // Komentar sme da obrise samo njegov autor ili admin.
+  async deleteKomentar(
+    idKomentara: number,
+    userId: number,
+    role: UserRole,
+  ): Promise<void> {
+    // Ucitavamo komentar ZAJEDNO sa autorom (relacija user nije eager),
+    // da bismo mogli da proverimo ko ga je napisao.
+    const komentar = await this.animeKomentarRepository.findOne({
+      where: { id: idKomentara },
+      relations: ['user'],
+    });
 
     if (!komentar) {
       throw new NotFoundException(
         `Komentar sa ID-om ${idKomentara} nije pronađen`,
+      );
+    }
+
+    const jeAdmin = role === UserRole.ADMIN;
+    const jeAutor = komentar.user?.id === userId;
+    if (!jeAdmin && !jeAutor) {
+      throw new ForbiddenException(
+        'Samo autor komentara ili admin moze da obrise komentar',
       );
     }
 

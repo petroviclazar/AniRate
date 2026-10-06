@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="authenticated">
+<ng-container *ngIf="isOwner || isAdmin || (isMember$ | async)">
   <div class="add-anime-form">
     <h2>Dodaj novi anime</h2>
     <form (submit)="addAnime()" [formGroup]="form">

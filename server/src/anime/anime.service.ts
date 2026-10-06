@@ -3,8 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import { Anime } from './anime.entity';
 import { AnimeStudioService } from 'src/animestudio/animestudio.service';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { AnimeRating } from 'src/animerating/animerating.entity';
+import { UserRole } from 'src/user/user-role.enum';
+import { User } from '../user/user.entity';
+import { StudioMembership } from 'src/studio-membership/studio-membership.entity';
+import { MembershipStatus } from 'src/studio-membership/membership-status.enum';
 
 @Injectable()
 export class AnimeService {
@@ -13,6 +17,8 @@ export class AnimeService {
     private readonly animeRepository: Repository<Anime>,
     @Inject(AnimeStudioService)
     private readonly animeStudioService: AnimeStudioService,
+    @InjectRepository(StudioMembership)
+    private readonly studioMembershipRepository: Repository<StudioMembership>
   ) {}
 
   async findAnimeByName(name: string): Promise<Anime | null> {
@@ -22,10 +28,22 @@ export class AnimeService {
     return this.animeRepository.findOneById(id);
   }
 
-  async addAnimeWithStudio(anime: Anime, studioId: number): Promise<Anime> {
+  async addAnimeWithStudio(anime: Anime, studioId: number,userId:number,role:UserRole): Promise<Anime> {
     const studio = await this.animeStudioService.findOneById(studioId);
     if (!studio) {
       throw new NotFoundException(`Studio with ID ${studioId} not found`);
+    }
+    const jeAdmin= role === UserRole.ADMIN;
+    const jeVlasnik= studio.owner?.id===userId;
+    const clanstvo= await this.studioMembershipRepository.findOne({where: {studio: {id:studioId},
+    user:{id:userId},
+    status:MembershipStatus.APPROVED
+    },
+  });
+  const jeClan=!!clanstvo;
+    
+    if (!jeAdmin && !jeVlasnik && !jeClan ) {
+    throw new ForbiddenException('Samo admin, vlasnik studija ili clan studija mogu da dodaju anime');
     }
 
     anime.studio = studio;

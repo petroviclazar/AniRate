@@ -7,7 +7,9 @@ import {
   Param,
   UseGuards,
   Delete,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { AnimeKomentarService } from './animekomentar.service';
 import { AnimeKomentar } from './animekomentar.entity';
 import { LoggedGuard } from 'src/guards/logged.guard';
@@ -49,8 +51,14 @@ export class AnimeKomentarController {
   }
   @Delete('deleteKomentar/:idKomentara')
   @UseGuards(LoggedGuard)
-  async deleteKomentar(@Param('idKomentara') idKomentara: number) {
-    console.log(idKomentara);
-    await this.animekomentarService.deleteKomentar(idKomentara);
+  async deleteKomentar(
+    @Param('idKomentara') idKomentara: number,
+    @Req() req: Request,
+  ) {
+    // Ko brise i koja mu je uloga - iz JWT-a (LoggedGuard ga je upisao u req.user),
+    // a ne od klijenta, da niko ne bi mogao da se predstavi kao neko drugi.
+    const userId = (req as any).user.sub;
+    const role = (req as any).user.role;
+    await this.animekomentarService.deleteKomentar(idKomentara, userId, role);
   }
 }

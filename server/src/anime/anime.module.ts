@@ -9,17 +9,19 @@ import { AnimeRatingModule } from 'src/animerating/animerating.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggedGuard } from 'src/guards/logged.guard';
 import { UserModule } from 'src/user/user.module';
+import { StudioMembership } from 'src/studio-membership/studio-membership.entity';
+
 
 @Module({
   imports: [
     AnimeStudioModule,
-    TypeOrmModule.forFeature([Anime]),
+    TypeOrmModule.forFeature([Anime,StudioMembership]),
     JwtModule.register({
       secret: 'your-secret-key',
       signOptions: { expiresIn: '3h' },
     }),
   ],
-  providers: [AnimeService],
+  providers: [AnimeService,StudioMembership],
   controllers: [AnimeController],
   exports: [AnimeService],
 })
