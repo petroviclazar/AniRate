@@ -56,23 +56,6 @@ export class AnimeEffects {
       })
     )
   );
-  // putAnime$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(AnimeActions.updateAnime),
-  //     mergeMap((action) =>
-  //       this.animeService.updateAnime(action.anime).pipe(
-  //         map((anime) => AnimeActions.updateAnimeSuccess({ anime })),
-  //         catchError((error) =>
-  //           of(
-  //             AnimeActions.updateAnimeFailure({
-  //               error: error.message,
-  //             })
-  //           )
-  //         )
-  //       )
-  //     )
-  //   )
-  // );
   constructor(
     private actions$: Actions,
     private animeService: AnimeService,

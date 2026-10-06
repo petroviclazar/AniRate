@@ -23,17 +23,12 @@ export class AnimeKomentarService {
     animeId: number,
     animeRating: string,
   ): Promise<AnimeKomentar> {
-    console.log(1111111111111111111111111111);
 
-    console.log(animeRating);
-    console.log(222222222222222222222222222222);
 
     const animerating = new AnimeKomentar();
     animerating.komentar = animeRating;
-    console.log(userId);
     animerating.user = await this.userService.findById(userId);
     animerating.anime = await this.animeService.findById(animeId);
-    console.log(animeRating);
 
     const savedRating = await this.animeKomentarRepository.save(animerating);
 
@@ -43,7 +38,6 @@ export class AnimeKomentarService {
     return savedRating;
   }
   async getKomentarZaAnime(animeId: number): Promise<AnimeKomentar[]> {
-    console.log(animeId);
     return await this.animeKomentarRepository
       .createQueryBuilder('comment')
       .where('comment.animeId = :animeId', { animeId })

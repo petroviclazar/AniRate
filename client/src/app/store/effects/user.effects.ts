@@ -2,12 +2,10 @@ import { LoginService } from '../../services/login.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 
-import { loginUser } from './../actions/user.actions';
-import { createAction } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as UserActions from '../actions/user.actions';
-import { catchError, defer, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable()

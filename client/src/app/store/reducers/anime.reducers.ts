@@ -68,15 +68,5 @@ export const reducer4 = createReducer(
   })),
   on(animeRatingActions.postAnimeRatingSuccess, (state, action) => {
     return adapter.addOne(action.animeRating, { ...state, isLoading: false });
-  }),
-  on(animeActions.updateAnime, (state) => ({ ...state, isLoading: true })),
-  on(animeActions.updateAnimeSuccess, (state, action) => ({
-    ...state,
-    isLoading: false,
-    anime: action.anime,
-  })),
-  on(animeActions.updateAnimeFailure, (state, action) => ({
-    ...state,
-    error: action.error,
-  }))
+  })
 );

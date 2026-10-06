@@ -16,10 +16,12 @@ import { StudioMembership } from 'src/studio-membership/studio-membership.entity
   imports: [
     AnimeStudioModule,
     TypeOrmModule.forFeature([Anime,StudioMembership]),
-    JwtModule.register({
-      secret: 'your-secret-key',
+    JwtModule.registerAsync({
+      useFactory: () => ({
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '3h' },
-    }),
+  }),
+}),
   ],
   providers: [AnimeService,StudioMembership],
   controllers: [AnimeController],

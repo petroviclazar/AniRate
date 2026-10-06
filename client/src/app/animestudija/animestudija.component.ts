@@ -70,15 +70,9 @@ export class AnimestudijaComponent implements OnInit {
     });
     this.store.dispatch(AnimeStudijaActions.getAnimeStudija());
   }
-  prikazi() {
-    this.animeStudija$?.subscribe((res) => {
-      console.log(res);
-    });
-  }
   handleFileChange(event: any) {
     this.selectedFile = event.target.files[0];
     if (this.form.value.slika) {
-      console.log(this.form.value);
     }
   }
   getBackgroundStyle(imageUrl: string | undefined) {
@@ -93,11 +87,9 @@ export class AnimestudijaComponent implements OnInit {
   async addAnimeStudio() {
     if (this.form.valid) {
       const info = this.form.value;
-      console.log('info', info);
       const downloadURL = await this.uploadService.uploadFile(
         this.selectedFile!
       );
-      console.log('Nesto drugo', info.slika);
       this.store.dispatch(
         AnimeStudijaActions.postAnimeStudija({
           animeStudio: {

@@ -14,7 +14,7 @@ export class AnimeRatingEffects {
       ofType(animeRatingActions.postAnimeRating),
       switchMap((action) => {
         return this.animeRatingService
-          .postAnimeRating(action.animeRating, action.id, action.userId)
+          .postAnimeRating(action.animeRating, action.id)
           .pipe(
             map(() =>
               animeRatingActions.postAnimeRatingSuccess({

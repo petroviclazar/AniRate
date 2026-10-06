@@ -81,7 +81,6 @@ export class AnimeComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const id = params['id'];
-      console.log(id);
       this.store.pipe(select(selectUserFeature)).subscribe((userState) => {
         this.isLoggedIn = userState.isLoggedIn;
         this.authenticated = userState.isLoggedIn;
@@ -135,7 +134,6 @@ export class AnimeComponent implements OnInit {
     });
   }
   handleImageError(event: any) {
-    console.log(this.user);
     event.target.src = this.user.photo; // Postavi sliku trenutnog korisnika ako se slika ne može učitati
   }
   dodajKomentar(): void {
@@ -170,14 +168,7 @@ export class AnimeComponent implements OnInit {
     });
   }
   delete(id: number) {
-    console.log(id);
     if (confirm('Da li zaista zelite da obrisete komentar')) {
       this.store1.dispatch(AnimeKomentarActions.deleteComment({ id }));
     }
-  }
-  prikazi() {
-    this.anime$.subscribe((res) => {
-      console.log(res);
-    });
-  }
-}
+  }}

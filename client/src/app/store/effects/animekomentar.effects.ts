@@ -13,7 +13,7 @@ export class AnimeKomentarEffects {
       ofType(animeKomentarActions.postAnimeKomentar),
       switchMap((action) => {
         return this.animeKomentarService
-          .postAnimeKomentar(action.komentar, action.id, action.userId)
+          .postAnimeKomentar(action.komentar, action.id)
           .pipe(
             map(() =>
               animeKomentarActions.postAnimeKomentarSuccess({

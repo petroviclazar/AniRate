@@ -30,10 +30,8 @@ export class AnimeRatingService {
       const updatedRating = await this.animeRatingRepository.save(
         existingRating,
       );
-      console.log(22222222222222222);
 
       await this.updateAnimeRating(animeId);
-      console.log(22222222222222222);
 
       return updatedRating;
     }
@@ -44,10 +42,7 @@ export class AnimeRatingService {
     newRating.anime = await this.animeService.findById(animeId);
 
     const savedRating = await this.animeRatingRepository.save(newRating);
-    console.log(22222222222222222);
 
-    console.log(animeId);
-    console.log(22222222222222222);
 
     await this.updateAnimeRating(animeId);
 

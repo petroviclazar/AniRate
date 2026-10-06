@@ -120,11 +120,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.najboljeOcenjen = trenutnoNajbolji;
   }
 
-  prikazi() {
-    this.anime$?.subscribe((res) => {
-      console.log(res);
-    });
-  }
   getBackgroundStyle(imageUrl: string) {
     return {
       'background-image': `url(${imageUrl})`,

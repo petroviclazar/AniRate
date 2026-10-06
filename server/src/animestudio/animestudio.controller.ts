@@ -25,7 +25,6 @@ export class AnimeStudioController {
   }
   @Get('getAnimeStudio/:id')
   getAnimeStudio1(@Param('id') id: number) {
-    console.log(id);
     return this.AnimeStudioService.getAnimeStudio(id);
   }
 

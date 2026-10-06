@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import {
   AnimeRating,
   AnimeRatingModel,
@@ -14,17 +13,17 @@ import { environment } from '../environments/environment';
 export class AnimeRatingService {
   constructor(private http: HttpClient, private router: Router) {}
 
+  // Ko ocenjuje se NE salje - backend ga uzima iz JWT kolacica.
   postAnimeRating(
     animeRating: AnimeRatingModel,
-    id: number,
-    id1: number
+    id: number
   ): Observable<AnimeRating[]> {
     const animeRatingData = {
       rating: animeRating.animeRating,
     };
 
     return this.http.post<AnimeRating[]>(
-      `${environment.apiUrl}/animerating/addAnime5/${id}/${id1}`,
+      `${environment.apiUrl}/animerating/addAnime5/${id}`,
       animeRatingData,
       {
         withCredentials: true,

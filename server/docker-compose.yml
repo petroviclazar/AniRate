@@ -5,8 +5,8 @@ services:
     image: postgres:15
     restart: always
     environment:
-      - POSTGRES_PASSWORD=lazar123
-      - POSTREGS_USERNAME=postgres
+      # Lozinka se cita iz .env (Docker Compose ga sam ucitava iz ovog foldera).
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     container_name: postgres
     volumes:
       - ./pgdata:/var/lib/postgresql/data
@@ -18,6 +18,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: nest-docker-postgres
+    # .env se ucitava pri svakom pokretanju kontejnera, pa izmene u njemu
+    # (npr. JWT_SECRET, CLIENT_URL) vaze bez ponovnog build-a slike.
+    env_file:
+      - .env
     environment:
       - PORT=${PORT}
     ports:

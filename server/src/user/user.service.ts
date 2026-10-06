@@ -38,13 +38,9 @@ export class UserService {
     });
 
     if (existingUser) {
-      console.log(
-        `Korisnik sa korisničkim imenom ${user.username} već postoji.`,
-      );
       return null; // Vraćamo null kako bismo označili da nije dodan novi korisnik
     }
 
-    console.log(user);
     const hashedPassword = await bcrypt.hash(user.password, 10);
     // Uloga se UVEK postavlja na serveru, nikad se ne prihvata direktno od
     // klijenta - u suprotnom bi bilo ko mogao da se registruje kao admin
@@ -99,8 +95,6 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    console.log(user.photo);
-    console.log(photo);
     user.photo = photo;
 
     await this.userRepository.save(user);
@@ -116,7 +110,6 @@ export class UserService {
     return user;
   }
   async findUserWithAnime(userId: number) {
-    console.log(userId);
     const user = await this.userRepository.findOne({
       where: {
         id: userId,

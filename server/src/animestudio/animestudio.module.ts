@@ -14,9 +14,13 @@ import { RolesGuard } from 'src/guards/roles.guard';
     // UserModule) da bismo izbegli kruznu zavisnost:
     // UserModule -> AnimeModule -> AnimeStudioModule -> UserModule.
     TypeOrmModule.forFeature([AnimeStudio, User]),
-    JwtModule.register({
-      secret: 'your-secret-key',
-      signOptions: { expiresIn: '3h' },
+    // Tajna za potpisivanje JWT-a cita se iz .env (JWT_SECRET), nije u kodu.
+    // registerAsync: fabrika se izvrsava tek kad je .env vec ucitan.
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: '3h' },
+      }),
     }),
   ],
   controllers: [AnimeStudioController],

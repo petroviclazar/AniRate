@@ -12,9 +12,13 @@ import { AnimeModule } from 'src/anime/anime.module';
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule,
-    JwtModule.register({
-      secret: 'your-secret-key',
-      signOptions: { expiresIn: '10h' },
+    // Tajna za potpisivanje JWT-a cita se iz .env (JWT_SECRET), nije u kodu.
+    // registerAsync: fabrika se izvrsava tek kad je .env vec ucitan.
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: '10h' },
+      }),
     }),
     AnimeModule,
   ],

@@ -23,7 +23,7 @@ export class RegistrationService {
       const response = await this.http
         .get(`${environment.apiUrl}/user/getUserByUsername/${username}`)
         .toPromise();
-      console.log(response); // Dodajte ovo
+
       return true;
     } catch (error) {
       console.error(error);

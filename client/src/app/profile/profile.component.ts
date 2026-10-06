@@ -63,25 +63,20 @@ export class ProfileComponent implements OnInit {
     this.error$ = this.store1.select(selectorError);
     this.useri$ = this.store1.select(userSelector);
     this.user = new UserModel();
-    console.log('Nestoooooo');
   }
   handleFileChange(event: any) {
     this.selectedFile = event.target.files[0];
     if (this.form.value.photo) {
-      console.log(this.form.value);
     }
   }
   updateSliku() {
     this.route.params.subscribe(async (params) => {
       if (this.form.valid) {
         const info = this.form.value;
-        console.log('info', info);
         const id = params['username'];
         const downloadURL = await this.uploadService.uploadFile(
           this.selectedFile!
         );
-        console.log(id);
-        console.log(downloadURL);
         this.user!.photo = downloadURL;
 
         this.userImageUrl = downloadURL; // Ažuriranje userImageUrl
@@ -95,9 +90,7 @@ export class ProfileComponent implements OnInit {
         );
       }
       this.store1.select(userSelector).subscribe((useri) => {
-        console.log('Korisnik iz store-a:', this.useri$);
 
-        console.log('Nenad porukica', useri?.photo);
       });
     });
   }
@@ -109,7 +102,6 @@ export class ProfileComponent implements OnInit {
 
     this.route.params.subscribe(async (params) => {
       const username = params['username']; // Preuzimanje korisničkog imena iz parametra putanje
-      console.log('Korisničko ime:', username);
 
       // Sveže čitanje ulogovanog korisnika iz localStorage-a pri SVAKOJ
       // promeni rute (ne samo jednom pri kreiranju komponente), jer Angular
@@ -147,12 +139,6 @@ export class ProfileComponent implements OnInit {
           this.isLoggedIn = true;
         }
       });
-    });
-  }
-
-  prikazi() {
-    this.useri$.subscribe((res) => {
-      console.log(res);
     });
   }
 }

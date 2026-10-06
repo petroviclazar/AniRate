@@ -41,15 +41,12 @@ export class RegistrationComponent implements OnInit {
   }
 
   async register() {
-    console.log(this.form.value);
     if (this.form.valid) {
       const info = this.form.value;
-      console.log('info', info);
       try {
         const downloadURL = await this.uploadService.uploadFile(
           this.selectedFile!
         );
-        console.log('Nesto drugo', downloadURL);
         const formData = {
           username: info.username,
           password: info.password,
@@ -59,7 +56,6 @@ export class RegistrationComponent implements OnInit {
         const existingUser = await this.registrationService.checkExistingUser(
           info.username
         );
-        console.log(existingUser);
         if (existingUser) {
           console.error('Korisnik sa istim korisničkim imenom već postoji');
           alert('Postoji dati username');
@@ -68,10 +64,8 @@ export class RegistrationComponent implements OnInit {
         const success = await this.registrationService.registerUser(
           formData
         );
-        console.log(success);
         if (success) {
           this.router.navigate(['/login']);
-          console.log('Registracija uspešna');
           alert('Uspesna registracija mozete se prijaviti');
         } else {
           console.error('Greška prilikom registracije');
@@ -88,7 +82,6 @@ export class RegistrationComponent implements OnInit {
   handleFileChange(event: any) {
     this.selectedFile = event.target.files[0];
     if (this.form.value.photo) {
-      console.log(this.form.value);
     }
   }
 }

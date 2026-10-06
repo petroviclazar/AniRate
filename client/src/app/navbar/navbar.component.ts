@@ -23,7 +23,6 @@ export class NavbarComponent implements OnInit {
   user1: UserModel;
   isAdmin = false;
   handleNavBar() {
-    console.log(this.logoImg);
     this.toggleMenu = !this.toggleMenu;
   }
 
@@ -60,9 +59,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    console.log(this.user1);
     this.user = null;
-    console.log(this.user);
 
     this.store.dispatch(UserActions.logOutUser());
   }

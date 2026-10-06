@@ -6,7 +6,9 @@ import {
   NotFoundException,
   Param,
   UseGuards,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { AnimeRatingService } from './animerating.service';
 import { AnimeRating } from './animerating.entity';
 import { LoggedGuard } from 'src/guards/logged.guard';
@@ -15,24 +17,16 @@ import { LoggedGuard } from 'src/guards/logged.guard';
 export class AnimeRatingController {
   constructor(private readonly animeratingService: AnimeRatingService) {}
 
-  @Post('addAnime')
-  @UseGuards(LoggedGuard)
-  async addAnime(
-    @Body('animeRating') animeRating: number,
-    @Body('animeId') animeId: number,
-    @Body('userId') userId: number,
-  ): Promise<AnimeRating> {
-    return this.animeratingService.createRating(userId, animeId, animeRating);
-  }
-  @Post('addAnime5/:animeId/:userId')
+  // Ko ocenjuje uzimamo iz JWT-a (req.user, upisao ga LoggedGuard), a ne iz
+  // URL-a - inace bi korisnik mogao da oceni u tudje ime.
+  @Post('addAnime5/:animeId')
   @UseGuards(LoggedGuard)
   async addAnime5(
     @Param('animeId') animeId: number,
-    @Param('userId') userId: number,
     @Body() body: { rating: number },
+    @Req() req: Request,
   ): Promise<AnimeRating> {
-    const { rating } = body;
-    console.log(body);
-    return this.animeratingService.createRating(userId, animeId, rating);
+    const userId = (req as any).user.sub;
+    return this.animeratingService.createRating(userId, animeId, body.rating);
   }
 }

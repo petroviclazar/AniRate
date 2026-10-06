@@ -17,6 +17,16 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { LoggedGuard } from 'src/guards/logged.guard';
 
+// Hesirana lozinka nikad ne sme da napusti server - skidamo je iz svakog
+// korisnika pre nego sto ga vratimo klijentu.
+function bezLozinke(user: User | null) {
+  if (!user) {
+    return user;
+  }
+  const { password, ...ostalo } = user;
+  return ostalo;
+}
+
 @Controller('user')
 export class UserController {
   constructor(
@@ -25,32 +35,29 @@ export class UserController {
   ) {}
 
   @Post('addUser')
-  async addUser(@Body() user: User): Promise<User> {
-    return this.userService.addUser(user);
+  async addUser(@Body() user: User) {
+    return bezLozinke(await this.userService.addUser(user));
   }
 
   @Get('getUser')
-  async getUser(): Promise<User[]> {
-    return this.userService.getAllUser();
+  async getUser() {
+    const korisnici = await this.userService.getAllUser();
+    return korisnici.map((u) => bezLozinke(u));
   }
   @Post('addAnimeToUser/:userId/:animeId')
   async addAnimeToUser(
     @Param('userId') userId: number,
     @Param('animeId') animeId: number,
-  ): Promise<User> {
-    return this.userService.addAnimeToUser(userId, animeId);
+  ) {
+    return bezLozinke(await this.userService.addAnimeToUser(userId, animeId));
   }
   @Put('UpdateSliku/:userId')
   @UseGuards(LoggedGuard)
   async UpdateSliku(
     @Param('userId') userId: string,
-    @Body('photo') photo: any, // Promenite tip na 'any'
-  ): Promise<User> {
-    console.log(userId);
-    console.log(photo);
-
-    console.log('--------------------');
-    return this.userService.updateSliku(userId, photo);
+    @Body('photo') photo: any,
+  ) {
+    return bezLozinke(await this.userService.updateSliku(userId, photo));
   }
 
   @Get('getLoggedUser')
@@ -88,10 +95,10 @@ export class UserController {
   @UseGuards(LoggedGuard)
   async getUserWithId(@Param('userId') userId: number) {
     const user = await this.userService.findById(userId);
-    return user;
+    return bezLozinke(user);
   }
   @Get('getUserByUsername/:username')
   async getUserByUsername(@Param('username') username: string) {
-    return this.userService.getUserByUser(username);
+    return bezLozinke(await this.userService.getUserByUser(username));
   }
 }

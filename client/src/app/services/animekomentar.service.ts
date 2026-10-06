@@ -11,17 +11,17 @@ import { environment } from '../environments/environment';
 export class AnimeKomentarService {
   constructor(private http: HttpClient, private router: Router) {}
 
+  // Autor komentara se NE salje - backend ga uzima iz JWT kolacica.
   postAnimeKomentar(
     komentar: AnimeKomentar,
-    id: number,
-    id1: number
+    id: number
   ): Observable<AnimeKomentar[]> {
     const animeRatingData = {
       komentar: komentar.komentar,
     };
 
     return this.http.post<AnimeKomentar[]>(
-      `${environment.apiUrl}/komentar/addKomentar/${id}/${id1}`,
+      `${environment.apiUrl}/komentar/addKomentar/${id}`,
       animeRatingData,
       {
         withCredentials: true,

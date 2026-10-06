@@ -18,29 +18,21 @@ import { LoggedGuard } from 'src/guards/logged.guard';
 export class AnimeKomentarController {
   constructor(private readonly animekomentarService: AnimeKomentarService) {}
 
-  @Post('addAnime')
+  // Autora komentara uzimamo iz JWT-a (req.user), a ne iz URL-a - inace bi
+  // korisnik mogao da komentarise u tudje ime.
+  @Post('addKomentar/:animeId')
   @UseGuards(LoggedGuard)
-  async addAnime(
-    @Body('animeKomentar') animeKomentar: string,
-    @Body('animeId') animeId: number,
-    @Body('userId') userId: number,
+  async addKomentar(
+    @Param('animeId') animeId: number,
+    @Body() body: { komentar: string },
+    @Req() req: Request,
   ): Promise<AnimeKomentar> {
+    const userId = (req as any).user.sub;
     return this.animekomentarService.createRating(
       userId,
       animeId,
-      animeKomentar,
+      body.komentar,
     );
-  }
-  @Post('addKomentar/:animeId/:userId')
-  @UseGuards(LoggedGuard)
-  async addAnime5(
-    @Param('animeId') animeId: number,
-    @Param('userId') userId: number,
-    @Body() body: { komentar: string }, // Preuzima ceo JSON objekat
-  ): Promise<AnimeKomentar> {
-    const { komentar } = body;
-    console.log(body);
-    return this.animekomentarService.createRating(userId, animeId, komentar);
   }
   @Get('getKomentar/:animeId')
   @UseGuards(LoggedGuard)

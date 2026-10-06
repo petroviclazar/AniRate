@@ -46,15 +46,3 @@ export const postAnimeRFailure = createAction(
   '[Anime  page] Post Anime Failure',
   props<{ error: string }>()
 );
-export const updateAnime = createAction(
-  '[Update Page] Update Anime',
-  props<{ anime: AnimeModel }>()
-);
-export const updateAnimeSuccess = createAction(
-  '[Update Page], Update Anime Success',
-  props<{ anime: AnimeModel }>()
-);
-export const updateAnimeFailure = createAction(
-  '[Update Page], Update Anime Failure',
-  props<{ error: string }>()
-);
