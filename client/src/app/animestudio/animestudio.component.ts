@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest, forkJoin, map, of } from 'rxjs'; // Dodat forkJoin
+import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Observable, Subject, combineLatest, forkJoin, map, of } from 'rxjs'; // Dodat forkJoin
 import { AnimeStudioModel } from '../store/types/animestudio.module';
 import { AnimeStudioState } from '../store/types/animestudio.interface';
 import { Store, select } from '@ngrx/store';
@@ -43,13 +43,14 @@ import {
   pendingRequestsForStudioSelector,
 } from '../store/selectors/studioMembership.selectors';
 import { StudioMembershipModel } from '../store/types/studio-membership.module';
-
+import { takeUntil } from 'rxjs';
+import { take } from 'rxjs';
 @Component({
   selector: 'app-animestudio',
   templateUrl: './animestudio.component.html',
   styleUrls: ['./animestudio.component.css'],
 })
-export class AnimestudioComponent implements OnInit {
+export class AnimestudioComponent implements OnInit,OnDestroy {
   form!: FormGroup;
   isLoading$: Observable<boolean>;
   error$: Observable<String | null>;
@@ -81,6 +82,7 @@ export class AnimestudioComponent implements OnInit {
   assignOwnerUserId: number | null = null;
   private lastRequestedRequestsFor: number | null = null;
   private currentStudio: AnimeStudioModel | null = null;
+  private unistavanje$ =new Subject<void>();
 
   constructor(
     private store: Store<AnimeStudioState>,
@@ -108,14 +110,14 @@ export class AnimestudioComponent implements OnInit {
       episodeCount: new FormControl('', Validators.required),
       title: new FormControl('', Validators.required),
     });
-    this.store3.pipe(select(selectUserFeature)).subscribe((userState) => {
+    this.store3.pipe(select(selectUserFeature),takeUntil(this.unistavanje$)).subscribe((userState) => {
       this.isLoggedIn = userState.isLoggedIn;
       this.authenticated = userState.isLoggedIn;
       this.isAdmin = userState.user?.role === UserRole.ADMIN;
       this.currentUserId = userState.user?.id;
       this.osveziVlasnistvo();
     });
-    this.route.params.subscribe(async (params) => {
+    this.route.params.pipe(takeUntil(this.unistavanje$)).subscribe(async (params) => {
       // Parametar rute je string, pa ga pretvaramo u broj (+) da bi poredjenje
       // sa id-jevima iz store-a (brojevi) radilo.
       const id = +params['id'];
@@ -139,7 +141,7 @@ export class AnimestudioComponent implements OnInit {
       this.store.dispatch(AnimeStudioActions.getAnimeStudio({ id }));
       this.store1.dispatch(AnimeiActions.getAnimeForStudio({ id }));
     });
-    this.animeStudio$.subscribe((animeStudio) => {
+    this.animeStudio$.pipe(takeUntil(this.unistavanje$)).subscribe((animeStudio) => {
       this.currentStudio = animeStudio;
       this.osveziVlasnistvo();
     });
@@ -230,7 +232,7 @@ export class AnimestudioComponent implements OnInit {
     }
   }
   addAnime() {
-    this.route.params.subscribe(async (params) => {
+    this.route.params.pipe(take(1)).subscribe(async (params) => {
       if (this.form.valid) {
         const info = this.form.value;
         console.log('info', info);
@@ -257,8 +259,12 @@ export class AnimestudioComponent implements OnInit {
   }
 
   prikazi() {
-    this.anime1$?.subscribe((res) => {
+    this.anime1$?.pipe(takeUntil(this.unistavanje$)).subscribe((res) => {
       console.log(res);
     });
   }
-}
+  ngOnDestroy(): void {
+    this.unistavanje$.next();
+    this.unistavanje$.complete();
+  }
+}

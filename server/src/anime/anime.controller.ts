@@ -14,6 +14,7 @@ import { AnimeService } from './anime.service';
 import { Anime } from './anime.entity';
 import { LoggedGuard } from 'src/guards/logged.guard';
 import { Request } from 'express';
+import { ANIME_PO_STRANI } from './anime.constants';  
 
 @Controller('anime')
 export class AnimeController {
@@ -38,7 +39,7 @@ export class AnimeController {
   ) {
     return this.animeService.getAllAnime(
       page ? parseInt(page, 10) : 1,
-      limit ? parseInt(limit, 10) : 20,
+      limit ? parseInt(limit, 10) : ANIME_PO_STRANI,
     );
   }
   @Get('getAnimeByStudio/:id')

@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { UserModel } from '../store/types/user.module';
@@ -37,6 +36,8 @@ import {
 import { AnimeRatingState } from '../store/types/animerating.interface';
 import { UserState } from '../store/types/user.interface';
 import { selectUserFeature } from '../store/selectors/user.selectors';
+import { Component,OnInit,OnDestroy } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-anime',

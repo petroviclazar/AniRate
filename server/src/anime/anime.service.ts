@@ -9,6 +9,7 @@ import { UserRole } from 'src/user/user-role.enum';
 import { User } from '../user/user.entity';
 import { StudioMembership } from 'src/studio-membership/studio-membership.entity';
 import { MembershipStatus } from 'src/studio-membership/membership-status.enum';
+import { ANIME_PO_STRANI } from './anime.constants';    
 
 @Injectable()
 export class AnimeService {
@@ -55,7 +56,7 @@ export class AnimeService {
   // korisnik zaista ucitao ("Ucitaj jos"), ne ceo katalog u NgRx store-u.
   async getAllAnime(
     page = 1,
-    limit = 20,
+    limit = ANIME_PO_STRANI,
   ): Promise<{ data: Anime[]; total: number; page: number; limit: number }> {
     const [data, total] = await this.animeRepository.findAndCount({
       skip: (page - 1) * limit,

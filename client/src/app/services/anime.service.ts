@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { Anime, AnimeModel } from '../store/types/anime.module';
 import { environment } from '../environments/environment';
+import { ANIME_PO_STRANI } from '../anime.constants';       
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -23,7 +24,7 @@ export class AnimeService {
   // umesto da se ceo katalog uvek povlaci i drzi u NgRx store-u.
   getAllAnime(
     page: number = 1,
-    limit: number = 5
+    limit: number = ANIME_PO_STRANI
   ): Observable<PaginatedResponse<Anime>> {
     return this.http.get<PaginatedResponse<Anime>>(
       `${environment.apiUrl}/anime/getAnime`,
