@@ -7,6 +7,8 @@ import { User } from 'src/user/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggedGuard } from 'src/guards/logged.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { StudioMembership } from '../studio-membership/studio-membership.entity';
+
 
 @Module({
   imports: [

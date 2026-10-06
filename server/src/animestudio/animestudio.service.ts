@@ -4,6 +4,7 @@ import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
 import { AnimeStudio } from './animestudio.entity';
 import { UserRole } from '../user/user-role.enum';
+import { StudioMembership } from '../studio-membership/studio-membership.entity';
 
 @Injectable()
 export class AnimeStudioService {
@@ -12,6 +13,8 @@ export class AnimeStudioService {
     private readonly animeStudioRepository: Repository<AnimeStudio>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(StudioMembership)
+    private readonly membershipRepository: Repository<StudioMembership>
   ) {}
 
   async getAllAnimeStudio(): Promise<AnimeStudio[]> {
@@ -47,6 +50,11 @@ export class AnimeStudioService {
 
   studio.owner = user;
   await this.animeStudioRepository.save(studio);
+
+  await this.membershipRepository.delete({
+    studio: {id:studioId},
+    user: {id:userId},
+  });
 
   if (user.role === UserRole.MEMBER) {
     user.role = UserRole.STUDIO_OWNER;
